@@ -1,0 +1,11 @@
+{
+    "name": "Mpesa",
+    "alias": "mpesa",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
