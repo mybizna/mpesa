@@ -5,10 +5,10 @@ namespace Modules\Mpesa\Entities;
 use Modules\Base\Entities\BaseModel;
 use Illuminate\Database\Schema\Blueprint;
 
-class Url extends BaseModel
+class Webhook extends BaseModel
 {
 
-    protected $table = "mpesa_url";
+    protected $table = "mpesa_webhook";
 
     public $migrationDependancy = [];
 
