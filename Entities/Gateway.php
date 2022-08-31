@@ -12,7 +12,7 @@ class Gateway extends BaseModel
 
     public $migrationDependancy = [];
 
-    protected $fillable = ['title',  'slug', 'ledger_id', 'currency_id', 'description', 'published'];
+    protected $fillable = ['title',  'slug', 'ledger_id', 'currency_id', 'key',  'secret', 'till_bill_no', 'passkey', 'shortcode', 'description', 'published'];
 
 
     /**
@@ -30,10 +30,14 @@ class Gateway extends BaseModel
      */
     public function migration(Blueprint $table)
     {
-
         $table->increments('id');
         $table->string('title');
         $table->string('slug');
+        $table->string('key');
+        $table->string('secret');
+        $table->string('till_bill_no');
+        $table->string('passkey');
+        $table->string('shortcode');
         $table->integer('ledger_id')->nullable();
         $table->integer('currency_id')->nullable();
         $table->string('description')->nullable();
