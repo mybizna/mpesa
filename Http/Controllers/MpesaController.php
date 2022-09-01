@@ -20,6 +20,7 @@ class MpesaController extends BaseController
         $result = [];
         return response()->json($result);
     }
+
     public function callback(Request $request)
     {
         $result = [];
