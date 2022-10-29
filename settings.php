@@ -85,8 +85,8 @@ return [
         "value" => "",
         "category" => "Sandbox Mpesa",
     ],
-    'journal_id' => [
-        "title"=>"Journal Id",
+    'ledger_id' => [
+        "title"=>"Ledger Id",
         "type" => "recordpicker",
         "value" => $mpesa_ledger_id,     
         "comp_url" => "account/admin/ledger/list.vue",
