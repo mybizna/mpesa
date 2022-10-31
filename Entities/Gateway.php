@@ -35,6 +35,7 @@ class Gateway extends BaseModel
         $table->string('slug');
         $table->string('key');
         $table->string('secret');
+        $table->string('initiator');
         $table->string('till_bill_no');
         $table->string('passkey');
         $table->string('shortcode');
@@ -42,6 +43,7 @@ class Gateway extends BaseModel
         $table->integer('currency_id')->nullable();
         $table->string('description')->nullable();
         $table->tinyInteger('default')->default(false);
+        $table->tinyInteger('sandbox')->default(false);
         $table->tinyInteger('published')->default(false);
     }
 }

@@ -20,6 +20,7 @@ export default {
                 slug: "",
                 key: "",
                 secret: "",
+                initiator: "",
                 till_bill_no: "",
                 passkey: "",
                 shortcode: "",
@@ -28,14 +29,13 @@ export default {
                 description: "",
                 published: "",
             },
-
-   
             search_fields: [
                 { type: "text", name: "title", label: "Title", ope: "", },
-                { type: "text", name: "slug", label: "slug", ope: "", },
-                { type: "text", name: "key", label: "key", ope: "", },
-                { type: "text", name: "shortcode", label: "shortcode", ope: "", },
-                { type: "text", name: "passkey", label: "passkey", ope: "", },
+                { type: "text", name: "slug", label: "Slug", ope: "", },
+                { type: "text", name: "key", label: "Key", ope: "", },
+                { type: "text", name: "initiator", label: "Initiator", ope: "", },
+                { type: "text", name: "shortcode", label: "Short Code", ope: "", },
+                { type: "text", name: "passkey", label: "Pass Key", ope: "", },
                 { type: "text", name: "published", label: "Published", ope: "", },
             ],
             table_fields: [

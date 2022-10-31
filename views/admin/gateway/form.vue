@@ -6,6 +6,7 @@
                 <FormKit label="Slug" id="slug" type="text" validation="required" />
                 <FormKit label="Key" id="key" type="text" validation="required" />
                 <FormKit label="Secret" id="secret" type="text" validation="required" />
+                <FormKit label="Initiator" id="initiator" type="text" validation="required" />
                 <FormKit label="Ledger Id" id="ledger_id" type="text" validation="required" />
             </div>
             <div class="col-md-6">
@@ -38,6 +39,7 @@ export default {
                 slug: "",
                 key: "",
                 secret: "",
+                initiator: "",
                 till_bill_no: "",
                 passkey: "",
                 shortcode: "",

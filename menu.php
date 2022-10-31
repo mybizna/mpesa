@@ -3,9 +3,9 @@
 $this->add_module_info("mpesa", [
     'title' => 'Mpesa',
     'description' => 'Mpesa',
-    'icon' => 'fas fa-network-wired',
+    'icon' => 'fas fa-sack-dollar',
     'path' => '/mpesa/admin/payment',
-    'class_str' => 'text-secondary border-secondary'
+    'class_str' => 'text-green border-green'
 ]);
 
 $this->add_menu("mpesa", "payment", "Payment", "/mpesa/admin/payment", "fas fa-cogs", 5);
