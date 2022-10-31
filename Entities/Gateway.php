@@ -41,6 +41,7 @@ class Gateway extends BaseModel
         $table->integer('ledger_id')->nullable();
         $table->integer('currency_id')->nullable();
         $table->string('description')->nullable();
+        $table->tinyInteger('default')->default(false);
         $table->tinyInteger('published')->default(false);
     }
 }
