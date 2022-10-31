@@ -42,9 +42,10 @@ class MpesaServiceProvider extends ServiceProvider
 
         $return_url = Str::of($db_setting->value)->rtrim('/');
 
-        $static_settings = ['accounts' => []];
+        $static_settings = ['accounts' => [], 'cache_location' => '../cache'];
 
         foreach ($gateways as $key => $gateway) {
+
             $static_settings['accounts'][$gateway->slug] = [
                 'sandbox' => $gateway->slug,
                 'key' => $gateway->key,
@@ -58,11 +59,14 @@ class MpesaServiceProvider extends ServiceProvider
                     'callback' => $return_url . '/callback',
                 ],
             ];
+
+            if ($gateway->slug) {
+                $static_settings['default'] = $gateway->default;
+            }
         }
 
         $config = $this->app['config']->get('mpesa', []);
         $this->app['config']->set('mpesa', array_merge($static_settings, $config));
-
     }
 
     /**

@@ -33,6 +33,7 @@ class Webhook extends BaseModel
         $table->increments('id');
         $table->string('val');
         $table->string('conf');
+        $table->string('shortcode');
         $table->tinyInteger('published')->default(false);
     }
 }
