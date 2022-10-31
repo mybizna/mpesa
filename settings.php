@@ -22,7 +22,7 @@ return [
     'status' => [
         "title"=>"Status",
         "type" => "text",
-        "value" => "",
+        "value" => "sandbox",
         "category" => "Mpesa",
     ],
     'type' => [
@@ -39,6 +39,24 @@ return [
     ],
     'customer_secret' => [
         "title"=>"Customer Secret",
+        "type" => "text",
+        "value" => "",
+        "category" => "Mpesa",
+    ],
+    'initiator' => [
+        "title"=>"Initiator Username",
+        "type" => "text",
+        "value" => "",
+        "category" => "Mpesa",
+    ],
+    'short_code' => [
+        "title"=>"Short Code",
+        "type" => "text",
+        "value" => "",
+        "category" => "Mpesa",
+    ],
+    'paybill_tillno' => [
+        "title"=>"Paybill Tillno",
         "type" => "text",
         "value" => "",
         "category" => "Mpesa",
@@ -67,14 +85,20 @@ return [
         "value" => "",
         "category" => "Sandbox Mpesa",
     ],
-    'sandbox_express_short_code' => [
-        "title"=>"Sandbox Express Short Code",
+    'sandbox_initiator' => [
+        "title"=>"Sandbox Initiator Username",
         "type" => "text",
         "value" => "",
         "category" => "Sandbox Mpesa",
     ],
-    'sandbox_normal_short_code' => [
-        "title"=>"Sandbox Normal Short Code",
+    'sandbox_short_code' => [
+        "title"=>"Sandbox Short Code",
+        "type" => "text",
+        "value" => "",
+        "category" => "Sandbox Mpesa",
+    ],
+    'sandbox_paybill_tillno' => [
+        "title"=>"Sandbox Paybill Tillno",
         "type" => "text",
         "value" => "",
         "category" => "Sandbox Mpesa",

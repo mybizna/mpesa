@@ -4,7 +4,9 @@
     "description": "",
     "keywords": [],
     "priority": 0,
-    "providers": [],
+    "providers": [
+        "Modules\\Mpesa\\Providers\\MpesaServiceProvider"
+    ],
     "aliases": {},
     "files": [],
     "requires": []
