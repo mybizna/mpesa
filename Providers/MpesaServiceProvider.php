@@ -63,7 +63,9 @@ class MpesaServiceProvider extends ServiceProvider
 
             }
 
-            $return_url_t = Str::rtrim($merged_settings['return_url'], '/');
+            //print_r($merged_settings); exit;
+
+            $return_url_t = Str::of($merged_settings['return_url'])->rtrim('/');
 
             $static_settings = [
                 'accounts' => [
@@ -75,8 +77,8 @@ class MpesaServiceProvider extends ServiceProvider
                         'id_validation_callback' => $return_url_t . '/callback',
                         'lnmo' => [
                             'paybill' => $merged_settings['sandbox_paybill_tillno'],
-                            'shortcode' => $merged_settings['sandbox_shortcode'],
-                            'passkey' => $merged_settings['sandbox_passkey'],
+                            'shortcode' => $merged_settings['sandbox_short_code'],
+                            'passkey' => $merged_settings['sandbox_pass_key'],
                             'callback' => $return_url_t . '/callback',
                         ],
                     ],
@@ -89,19 +91,16 @@ class MpesaServiceProvider extends ServiceProvider
                         'id_validation_callback' => $return_url_t . '/callback',
                         'lnmo' => [
                             'paybill' => $merged_settings['paybill_tillno'],
-                            'shortcode' => $merged_settings['shortcode'],
-                            'passkey' => $merged_settings['passkey'],
+                            'shortcode' => $merged_settings['short_code'],
+                            'passkey' => $merged_settings['pass_key'],
                             'callback' => $return_url_t . '/callback',
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ];
-
-            print_r($static_settings);exit;
 
             $config = $this->app['config']->get('mpesa', []);
             $this->app['config']->set('mpesa', array_merge($static_settings, $config));
-
 
         }
 
