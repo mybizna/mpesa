@@ -67,6 +67,7 @@ class MpesaServiceProvider extends ServiceProvider
 
         $config = $this->app['config']->get('mpesa', []);
         $this->app['config']->set('mpesa', array_merge($static_settings, $config));
+
     }
 
     /**
