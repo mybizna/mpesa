@@ -188,4 +188,48 @@ class Mpesa
 
     }
 
+
+    /**
+     * J-son Response to M-pesa API feedback - Success or Failure
+     */
+    public function createValidationResponse($result_code, $result_description){
+        $result=json_encode(["ResultCode"=>$result_code, "ResultDesc"=>$result_description]);
+        $response = new Response();
+        $response->headers->set("Content-Type","application/json; charset=utf-8");
+        $response->setContent($result);
+        return $response;
+    }
+
+    public function mpesaValidation(Request $request)
+    {
+        $result_code = "0";
+        $result_description = "Accepted validation request.";
+        return $this->createValidationResponse($result_code, $result_description);
+    }
+    
+    public function mpesaConfirmation(Request $request)
+    {
+        $content=json_decode($request->getContent());
+        $mpesa_transaction = new MpesaTransaction();
+        $mpesa_transaction->TransactionType = $content->TransactionType;
+        $mpesa_transaction->TransID = $content->TransID;
+        $mpesa_transaction->TransTime = $content->TransTime;
+        $mpesa_transaction->TransAmount = $content->TransAmount;
+        $mpesa_transaction->BusinessShortCode = $content->BusinessShortCode;
+        $mpesa_transaction->BillRefNumber = $content->BillRefNumber;
+        $mpesa_transaction->InvoiceNumber = $content->InvoiceNumber;
+        $mpesa_transaction->OrgAccountBalance = $content->OrgAccountBalance;
+        $mpesa_transaction->ThirdPartyTransID = $content->ThirdPartyTransID;
+        $mpesa_transaction->MSISDN = $content->MSISDN;
+        $mpesa_transaction->FirstName = $content->FirstName;
+        $mpesa_transaction->MiddleName = $content->MiddleName;
+        $mpesa_transaction->LastName = $content->LastName;
+        $mpesa_transaction->save();
+        // Responding to the confirmation request
+        $response = new Response();
+        $response->headers->set("Content-Type","text/xml; charset=utf-8");
+        $response->setContent(json_encode(["C2BPaymentConfirmationResult"=>"Success"]));
+        return $response;
+    }
+
 }
