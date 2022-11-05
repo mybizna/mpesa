@@ -20,8 +20,8 @@ class Mpesa
         $return_url = Str::of(config('mpesa.return_url'))->rtrim('/');
         $business_code = config('mpesa.default');
 
-        $conf = $return_url . '/confirm';
-        $val = $return_url . '/validate';
+        $conf = $return_url . '/mpesa/confirm';
+        $val = $return_url . '/mpesa/validate';
 
         $gateways = DBGateway::where(['published' => true])->get();
 
@@ -147,7 +147,6 @@ class Mpesa
 
             }
         }
-        print_r($response);exit;
 
         return false;
     }

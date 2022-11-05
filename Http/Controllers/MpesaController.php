@@ -26,4 +26,18 @@ class MpesaController extends BaseController
         $result = [];
         return response()->json($result);
     }
+
+    public function confirm(Request $request)
+    {
+        $result = [];
+
+        
+        return response()->json($result);
+    }
+
+    public function validate(Request $request)
+    {
+        $result = [];
+        return response()->json($result);
+    }
 }
