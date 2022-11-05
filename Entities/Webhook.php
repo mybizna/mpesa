@@ -12,7 +12,7 @@ class Webhook extends BaseModel
 
     public $migrationDependancy = [];
 
-    protected $fillable = ['conf', 'val'];
+    protected $fillable = ['conf', 'val', 'shortcode', 'published'];
 
 
     /**

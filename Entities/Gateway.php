@@ -12,7 +12,7 @@ class Gateway extends BaseModel
 
     public $migrationDependancy = [];
 
-    protected $fillable = ['title',  'slug', 'ledger_id', 'currency_id', 'key',  'secret', 'till_bill_no', 'passkey', 'shortcode', 'description', 'published'];
+    protected $fillable = ['title',  'slug', 'ledger_id', 'currency_id', 'key',  'secret', 'initiator', 'till_bill_no', 'passkey', 'shortcode', 'description', 'default', 'sandbox', 'published'];
 
 
     /**

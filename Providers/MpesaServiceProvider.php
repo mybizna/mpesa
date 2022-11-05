@@ -60,8 +60,8 @@ class MpesaServiceProvider extends ServiceProvider
                 ],
             ];
 
-            if ($gateway->slug) {
-                $static_settings['default'] = $gateway->default;
+            if ($gateway->default) {
+                $static_settings['default'] = $gateway->slug;
             }
         }
 

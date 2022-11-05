@@ -2,8 +2,8 @@
 
 namespace Modules\Mpesa\Entities;
 
-use Modules\Base\Entities\BaseModel;
 use Illuminate\Database\Schema\Blueprint;
+use Modules\Base\Entities\BaseModel;
 
 class Stkpush extends BaseModel
 {
@@ -12,8 +12,7 @@ class Stkpush extends BaseModel
 
     public $migrationDependancy = [];
 
-    protected $fillable = ['amount', 'phone', 'reference', 'description', 'command', 'gateway_id', 'completed', 'successful'];
-
+    protected $fillable = ['amount', 'phone', 'reference', 'description', 'command', 'gateway_id', 'completed', 'successful', 'merchant_request_id', 'checkout_request_id'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -30,11 +29,14 @@ class Stkpush extends BaseModel
      */
     public function migration(Blueprint $table)
     {
+        $table->increments('id');
         $table->string('amount');
         $table->string('phone');
         $table->string('reference');
-        $table->string('description');
-        $table->string('command');
+        $table->string('description')->nullable();
+        $table->string('command')->nullable();
+        $table->string('merchant_request_id')->nullable();
+        $table->string('checkout_request_id')->nullable();
         $table->integer('gateway_id')->nullable();
         $table->tinyInteger('completed')->default(false);
         $table->tinyInteger('successful')->default(false);
