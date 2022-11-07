@@ -3,8 +3,8 @@
 namespace Modules\Mpesa\Classes;
 
 use Illuminate\Support\Str;
-use Modules\Account\Classes\Payment;
 use Modules\Account\Classes\Ledger;
+use Modules\Account\Classes\Payment;
 use Modules\Mpesa\Entities\Gateway as DBGateway;
 use Modules\Mpesa\Entities\Simulate as DBSimulate;
 use Modules\Mpesa\Entities\Stkpush as DBStkpush;
@@ -26,16 +26,21 @@ class Mpesa
         $gateways = DBGateway::where(['published' => true])->get();
 
         foreach ($gateways as $key => $gateway) {
+
             $webhook = DBWebhook::where(['conf' => $conf, 'shortcode' => $gateway->shortcode])->first();
 
             if (!$webhook) {
-                $response = Registrar::register($gateway->shortcode)
-                    ->onConfirmation($conf)
-                    ->onValidation($val)
-                    ->submit();
+                try {
+                    $response = Registrar::register($gateway->shortcode)
+                        ->onConfirmation($conf)
+                        ->onValidation($val)
+                        ->submit();
 
-                if ($response->ResponseCode == 0) {
-                    DBWebhook::create(['conf' => $conf, 'val' => $val, 'shortcode' => $gateway->shortcode, 'published' => true]);
+                    if ($response->ResponseCode == 0) {
+                        DBWebhook::create(['conf' => $conf, 'val' => $val, 'shortcode' => $gateway->shortcode, 'published' => true]);
+                    }
+                } catch (\Throwable$th) {
+                    //throw $th;
                 }
 
             }
@@ -188,14 +193,14 @@ class Mpesa
 
     }
 
-
     /**
      * J-son Response to M-pesa API feedback - Success or Failure
      */
-    public function createValidationResponse($result_code, $result_description){
-        $result=json_encode(["ResultCode"=>$result_code, "ResultDesc"=>$result_description]);
+    public function createValidationResponse($result_code, $result_description)
+    {
+        $result = json_encode(["ResultCode" => $result_code, "ResultDesc" => $result_description]);
         $response = new Response();
-        $response->headers->set("Content-Type","application/json; charset=utf-8");
+        $response->headers->set("Content-Type", "application/json; charset=utf-8");
         $response->setContent($result);
         return $response;
     }
@@ -206,10 +211,10 @@ class Mpesa
         $result_description = "Accepted validation request.";
         return $this->createValidationResponse($result_code, $result_description);
     }
-    
+
     public function mpesaConfirmation(Request $request)
     {
-        $content=json_decode($request->getContent());
+        $content = json_decode($request->getContent());
         $mpesa_transaction = new MpesaTransaction();
         $mpesa_transaction->TransactionType = $content->TransactionType;
         $mpesa_transaction->TransID = $content->TransID;
@@ -227,8 +232,8 @@ class Mpesa
         $mpesa_transaction->save();
         // Responding to the confirmation request
         $response = new Response();
-        $response->headers->set("Content-Type","text/xml; charset=utf-8");
-        $response->setContent(json_encode(["C2BPaymentConfirmationResult"=>"Success"]));
+        $response->headers->set("Content-Type", "text/xml; charset=utf-8");
+        $response->setContent(json_encode(["C2BPaymentConfirmationResult" => "Success"]));
         return $response;
     }
 
