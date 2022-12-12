@@ -3,9 +3,9 @@
 
         <div class="row">
             <div class="col-md-6">
-                <FormKit label="Val" id="val" type="text" validation="required" />
-                <FormKit label="Conf" id="conf" type="text" validation="required" />
-                <FormKit label="Published" id="published" type="switch" validation="required" />
+                <FormKit v-model="model.id" label="Val" id="val" type="text" validation="required" />
+                <FormKit v-model="model.conf" label="Conf" id="conf" type="text" validation="required" />
+                <FormKit v-model="model.published" label="Published" id="published" type="switch" validation="required" />
             </div>
         </div>
         
