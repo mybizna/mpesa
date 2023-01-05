@@ -20,7 +20,7 @@ class Simulate extends BaseModel
      *
      * @var array
      */
-    protected $dates = ['created_by', 'updated_by', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * List of fields for managing postings.
