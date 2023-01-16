@@ -18,9 +18,11 @@ class Gateway
             "title" => "MPesa",
             "slug" => "mpesa",
             "ledger_id" => $ledger_id,
-            "instruction" => "",
+            "instruction" => "Mpesa",
+            "module" => "Mpesa",
             "ordering" => 0,
-            "is_default" => true,
+            "is_default" => false,
+            "is_hidden" => false,
             "published" => true
         ]);
         
