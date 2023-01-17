@@ -12,7 +12,10 @@ class Gateway extends BaseModel
 
     public $migrationDependancy = [];
 
-    protected $fillable = ['title',  'slug', 'ledger_id', 'currency_id', 'key',  'secret', 'initiator', 'till_bill_no', 'passkey', 'shortcode', 'description', 'default', 'sandbox', 'published'];
+    protected $fillable = ['title',  'slug', 'ledger_id', 'currency_id', 'consumer_key',  
+    'consumer_secret', 'initiator_name','initiator_password','party_a','party_b', 'type', 
+     'passkey', 'business_shortcode', 'phone_number','method',
+    'description', 'default', 'sandbox', 'published'];
 
 
     /**
@@ -33,12 +36,17 @@ class Gateway extends BaseModel
         $table->increments('id');
         $table->string('title');
         $table->string('slug');
-        $table->string('key');
-        $table->string('secret');
-        $table->string('initiator');
-        $table->string('till_bill_no');
+        $table->string('consumer_key');
+        $table->string('consumer_secret');
+        $table->string('initiator_name');
+        $table->string('initiator_password');
         $table->string('passkey');
-        $table->string('shortcode');
+        $table->string('party_a');
+        $table->string('party_b');
+        $table->string('business_shortcode');
+        $table->string('phone_number');
+        $table->enum('type', ['paybill', 'tillno'])->default('paybill')->nullable();
+        $table->enum('method', ['sending', 'stkpush'])->default('sending')->nullable();
         $table->integer('ledger_id')->nullable();
         $table->integer('currency_id')->nullable();
         $table->string('description')->nullable();
@@ -47,3 +55,9 @@ class Gateway extends BaseModel
         $table->tinyInteger('published')->default(false);
     }
 }
+
+/**
+ * 
+ * ReceiverIdentifierType
+ * 
+ */

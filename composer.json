@@ -17,7 +17,6 @@
   ],
   "require": {
     "mybizna/account": "^1.0.0",
-    "smodav/mpesa": "^v6.0.0"
   },
   "extra": {
     "laravel": {

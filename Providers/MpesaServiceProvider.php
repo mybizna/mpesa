@@ -53,7 +53,7 @@ class MpesaServiceProvider extends ServiceProvider
                 'initiator' => $gateway->initiator,
                 'id_validation_callback' => $return_url . '/callback',
                 'lnmo' => [
-                    'paybill' => $gateway->till_bill_no,
+                    'paybill' => $gateway->type,
                     'shortcode' => $gateway->shortcode,
                     'passkey' => $gateway->passkey,
                     'callback' => $return_url . '/callback',

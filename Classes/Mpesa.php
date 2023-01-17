@@ -2,6 +2,7 @@
 
 namespace Modules\Mpesa\Classes;
 
+use Config;
 use Illuminate\Support\Str;
 use Modules\Account\Classes\Ledger;
 use Modules\Account\Classes\Payment;
@@ -9,41 +10,76 @@ use Modules\Mpesa\Entities\Gateway as DBGateway;
 use Modules\Mpesa\Entities\Simulate as DBSimulate;
 use Modules\Mpesa\Entities\Stkpush as DBStkpush;
 use Modules\Mpesa\Entities\Webhook as DBWebhook;
-use SmoDav\Mpesa\Laravel\Facades\Registrar;
-use SmoDav\Mpesa\Laravel\Facades\Simulate;
-use SmoDav\Mpesa\Laravel\Facades\STK;
 
 class Mpesa
 {
     public function setup()
     {
-        $return_url = Str::of(config('mpesa.return_url'))->rtrim('/');
-        $business_code = config('mpesa.default');
 
-        $conf = $return_url . '/mpesa/confirm';
-        $val = $return_url . '/mpesa/validate';
+        $return_url = url()->rtrim('/');
+
+        $confirmation_url = $return_url . '/mpesa/confirm';
+        $validation_url = $return_url . '/mpesa/validate';
+        $stkpush_url = $return_url . '/mpesa/stkpush';
+        $reversal_queue_url = $return_url . '/mpesa/reversal_queue';
+        $reversal_result_url = $return_url . '/mpesa/reversal_result';
+
+        Config::set("mpesa.default", $gateway->slug);
+        Config::set("mpesa.accounts.confirmation_url", $confirmation_url);
+        Config::set("mpesa.accounts.validation_url", $validation_url);
+        Config::set("mpesa.accounts.stkpush_url", $stkpush_url);
+        Config::set("mpesa.accounts.reversal_queue_url", $reversal_queue_url);
+        Config::set("mpesa.accounts.reversal_result_url", $reversal_result_url);
 
         $gateways = DBGateway::where(['published' => true])->get();
 
         foreach ($gateways as $key => $gateway) {
 
-            $webhook = DBWebhook::where(['conf' => $conf, 'shortcode' => $gateway->shortcode])->first();
+            $new_validation_url = $validation_url;
 
-            if (!$webhook) {
-                try {
-                    $response = Registrar::register($gateway->shortcode)
-                        ->onConfirmation($conf)
-                        ->onValidation($val)
-                        ->submit();
+            Config::set("mpesa.accounts.$gateway->slug.type", $gateway->type);
+            Config::set("mpesa.accounts.$gateway->slug.method", $gateway->method);
+            Config::set("mpesa.accounts.$gateway->slug.consumer_key", $gateway->consumer_key);
+            Config::set("mpesa.accounts.$gateway->slug.consumer_secret", $gateway->consumer_secret);
+            Config::set("mpesa.accounts.$gateway->slug.initiator_name", $gateway->initiator_name);
+            Config::set("mpesa.accounts.$gateway->slug.initiator_password", $gateway->initiator_password);
+            Config::set("mpesa.accounts.$gateway->slug.party_a", $gateway->party_a);
+            Config::set("mpesa.accounts.$gateway->slug.party_b", $gateway->party_b);
+            Config::set("mpesa.accounts.$gateway->slug.phone_number", $gateway->phone_number);
+            Config::set("mpesa.accounts.$gateway->slug.business_shortcode", $gateway->business_shortcode);
+            Config::set("mpesa.accounts.$gateway->slug.passkey", $gateway->passkey);
+            Config::set("mpesa.accounts.$gateway->slug.ledger_id", $gateway->ledger_id);
+            Config::set("mpesa.accounts.$gateway->slug.sandbox", $gateway->sandbox);
+            Config::set("mpesa.accounts.$gateway->slug.default", $gateway->default);
+            Config::set("mpesa.accounts.$gateway->slug.published", $gateway->published);
 
-                    if ($response->ResponseCode == 0) {
-                        DBWebhook::create(['conf' => $conf, 'val' => $val, 'shortcode' => $gateway->shortcode, 'published' => true]);
+            if ($gateway->default) {
+                Config::set("mpesa.default", $gateway->slug);
+            }
+
+            if ($gateway->method == 'sending') {
+                
+                $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $gateway->shortcode, 'slug' => $gateway->slug])->first();
+
+                if (!$webhook) {
+                    try {
+                        $response = Registrar::register($gateway->shortcode)
+                            ->usingAccount($gateway->slug)
+                            ->onConfirmation($confirmation_url)
+                            ->onValidation($validation_url)
+                            ->submit();
+
+                        if ($response->ResponseCode == 0) {
+                            DBWebhook::create(['confirmation_url' => $confirmation_url, 'validation_url' => $validation_url, 'shortcode' => $gateway->shortcode, 'slug' => $gateway->slug, 'published' => true]);
+                        }
+                    } catch (\Throwable$th) {
+                        //throw $th;
                     }
-                } catch (\Throwable$th) {
-                    //throw $th;
+
                 }
 
             }
+
         }
 
     }
@@ -102,7 +138,7 @@ class Mpesa
         }
 
         if (!isset($response->errorCode) && $response->ResponseCode == 0) {
-            DBStkpush::create(
+            $stkpush = DBStkpush::create(
                 [
                     'amount' => $amount,
                     'phone' => $phone,
@@ -116,41 +152,40 @@ class Mpesa
                 ]
             );
 
-            return true;
+            return $stkpush;
         }
 
         return false;
     }
 
-    public function validateStkpush($phone, $amount, $title, $partner_id, $invoice_id)
+    public function validateStkpush($checkout_request_id, $phone, $invoice)
     {
         $payment = new Payment();
         $ledger_cls = new Ledger();
 
         $this->setup();
 
-        $phone = $this->getPhone($phone);
-        $amount = $this->getAmount($amount);
+        $partner_id = $invoice->partner_id;
+        $title = $invoice->title;
+        $amount = $invoice->total;
+        $invoice_id = $invoice->id;
 
-        $stkpush = DBStkpush::where(['phone' => $phone, 'completed' => false])->orderBy('id', 'DESC')->first();
+        $response = STK::validate($checkout_request_id);
 
-        if ($stkpush) {
-            $response = STK::validate($stkpush->checkout_request_id);
-            if (!isset($response->errorCode) && $response->ResultCode == 0) {
+        if (!isset($response->errorCode) && $response->ResultCode == 0) {
 
-                $ledger = $ledger_cls->getLedgerBySlug('mpesa');
+            $ledger = $ledger_cls->getLedgerBySlug('mpesa');
 
-                $stkpush->completed = true;
-                $stkpush->successful = true;
-                //$stkpush->save();
+            $stkpush = DBStkpush::where('checkout_request_id', $checkout_request_id)->first();
+            $stkpush->completed = true;
+            $stkpush->successful = true;
+            $stkpush->save();
 
-                $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
+            $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
 
-                $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, ledger_id:$ledger->id, invoice_id:$invoice_id);
+            $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, ledger_id:$ledger->id, invoice_id:$invoice_id);
 
-                return true;
-
-            }
+            return $payment_data;
         }
 
         return false;
