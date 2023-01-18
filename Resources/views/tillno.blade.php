@@ -59,5 +59,5 @@
     </div>
 
 
-    <input type="hidden" name="url" value="{{ url(route('mpesa_tillno')) }}" />
+    <input id="tillno_url" type="hidden" name="url" value="{{ secure_url(route('mpesa_tillno')) }}" />
 </div

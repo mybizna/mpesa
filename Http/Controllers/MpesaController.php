@@ -60,9 +60,10 @@ class MpesaController extends BaseController
 
     public function stkpush(Request $request)
     {
-        $mpesa = new Mpesa();
-
+        
         $data = $request->all();
+        
+        $mpesa = new Mpesa($data['slug']);
 
         $invoice = DBInvoice::where(['id' => $data['invoice_id']])->first();
 
@@ -75,7 +76,7 @@ class MpesaController extends BaseController
                 $data['verified'] = 0;
             }
         } else {
-            $stkpush = $mpesa->stkpush($data['phone'], $invoice->total, $invoice->title);
+            $stkpush = $mpesa->stkpush($data['phone'], $invoice->total, $invoice->title, $data['account']);
             $data['stkpush'] = $stkpush;
 
             if ($stkpush) {

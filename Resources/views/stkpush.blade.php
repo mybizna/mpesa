@@ -28,7 +28,9 @@
         </div>
     </div>
 
-    <input id="stkpush_url" type="hidden" name="url" value="{{ url(route('mpesa_stkpush')) }}" />
+    <input id="stkpush_account" type="hidden" name="account" value="{{ $user->username }}" />
+    <input id="stkpush_url" type="hidden" name="url" value="{{ secure_url(route('mpesa_stkpush')) }}" />
+    <input id="stkpush_isp_access_thankyou" type="hidden" name="isp_access_thankyou" value="{{ secure_url(route('isp_access_thankyou')) }}" />
 </div>
 
 <script>
@@ -48,6 +50,7 @@
         let invoice_id = document.querySelector('#invoice_id').value;
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         let url = document.querySelector('#stkpush_url').value;
+        let account = document.querySelector('#stkpush_account').value;
 
         if (phone != '') {
             phone = parseInt(phone);
@@ -57,8 +60,6 @@
             alert('Phone Number is incorrect. ');
             return;
         }
-
-       
 
         fetch(url, {
                 headers: {
@@ -73,7 +74,8 @@
                     phone: phone,
                     slug: '{{ $gateway->slug }}',
                     shortcode: '{{ $gateway->shortcode }}',
-                    invoice_id: invoice_id
+                    invoice_id: invoice_id,
+                    account: account
                 })
             })
             .then((data) => {
@@ -88,10 +90,7 @@
 
     function validateSTKPush(checkout_request_id) {
 
-        let phone = document.querySelector('#phone').value;
-        let invoice_id = document.querySelector('#invoice_id').value;
-        let token = document.querySelector('name="_token"').value;
-        let url = document.querySelector('#stkpush_url').value;
+        let thankyou = document.querySelector('#stkpush_isp_access_thankyou').value;
 
         fetch(url, {
                 headers: {
@@ -103,13 +102,11 @@
                 method: 'post',
                 credentials: "same-origin",
                 body: JSON.stringify({
-                    phone: phone,
-                    invoice_id: invoice_id
+                    checkout_request_id: checkout_request_id
                 })
             })
             .then((data) => {
-                console.log(data);
-                window.location.href = thank_page;
+                window.location.href = thankyou;
             })
             .catch(function(error) {
                 console.log(error);

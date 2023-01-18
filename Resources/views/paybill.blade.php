@@ -62,5 +62,5 @@
         </button>
     </div>
 
-    <input type="hidden" name="url" value="{{ url(route('mpesa_paybill')) }}" />
+    <input id="paybill_url" type="hidden" name="url" value="{{ secure_url(route('mpesa_paybill')) }}" />
 </div>

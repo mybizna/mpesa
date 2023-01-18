@@ -8,40 +8,49 @@
 namespace Modules\Mpesa\Classes;
 
 use Config;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Class Mpesa
  * @package Safaricom\Mpesa
  */
-class Mpesa
+class MpesaCall
 {
 
     public $slug;
 
     public $token;
 
-    public function __constructor($slug = '')
+    public function __construct($slug = '')
     {
-
-        if (!$this->slug) {
-            $slug = Config::get('mpesa.default');
+        if ($slug == '') {
+            $this->slug = Config::get('mpesa.default');
+        } else {
+            $this->slug = $slug;
         }
 
-        $this->token = generateToken();
+        $this->token = $this->generateToken();
     }
 
     /**
      * This is used to generate tokens
      * @return mixed
      */
-    public function generateToken()
+    public function generateToken($force = false)
     {
+
+        if (!$force && Cache::has('mpesa_access_token')) {
+            return Cache::get('mpesa_access_token');
+        }
 
         $response = $this->makeCall('oauth/v1/generate?grant_type=client_credentials', is_initial:true);
 
-        print_r($response);exit;
+        $access_token = $response->access_token;
+        $expires_in = $response->expires_in;
 
-        return $response['access_token'];
+        Cache::put('mpesa_access_token', $access_token, $expires_in);
+
+        return $access_token;
 
         //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -61,12 +70,11 @@ class Mpesa
             'ShortCode' => $party_a,
         );
 
-        $response = $this->makeCall('/mpesa/c2b/v1/registerurl', $data, is_initial:true);
+        $response = $this->makeCall('/mpesa/c2b/v1/registerurl', $data);
 
         return $response;
 
     }
-
 
     /**
      * Use this function to initiate an STKPush Simulation
@@ -147,12 +155,12 @@ class Mpesa
             'CheckoutRequestID' => $checkout_request_id,
         );
 
-        $response = $this->makeCall('mpesa/stkpushquery/v1/query', $data, is_initial:true);
+        $response = $this->makeCall('mpesa/stkpushquery/v1/query', $data);
 
         return $response;
 
     }
-  
+
     /**
      * @param $InitiatorName |     This is the credential/username used to authenticate the transaction request.
      * @param $SecurityCredential | Encrypted password for the initiator to autheticate the transaction request
@@ -166,7 +174,7 @@ class Mpesa
      * @param $Occasion |     Optional
      * @return string
      */
-    public function b2c($command = 'BusinessPayment', $amount, $remarks, $occasion)
+    public function b2c($command = 'BusinessPayment', $amount = 10, $remarks = '', $occasion = '')
     {
 
         $initiator_name = Config::get("mpesa.accounts.$this->slug.initiator_name");
@@ -191,7 +199,7 @@ class Mpesa
             'Occasion' => $occasion,
         );
 
-        $response = $this->makeCall('/mpesa/b2c/v1/paymentrequest', $data, is_initial:true);
+        $response = $this->makeCall('/mpesa/b2c/v1/paymentrequest', $data);
 
         return $response;
 
@@ -219,7 +227,7 @@ class Mpesa
             'BillRefNumber' => $account,
         );
 
-        $response = $this->makeCall('/mpesa/c2b/v1/simulate', $data, is_initial:true);
+        $response = $this->makeCall('/mpesa/c2b/v1/simulate', $data);
 
         return $response;
 
@@ -253,7 +261,7 @@ class Mpesa
             'ResultURL' => $reversal_result_url,
         );
 
-        $response = $this->makeCall('/mpesa/accountbalance/v1/query', $data, is_initial:true);
+        $response = $this->makeCall('/mpesa/accountbalance/v1/query', $data);
 
         return $response;
 
@@ -297,13 +305,13 @@ class Mpesa
             'Occasion' => $Occasion,
         );
 
-        $response = $this->makeCall('/mpesa/transactionstatus/v1/query', $data, is_initial:true);
+        $response = $this->makeCall('/mpesa/transactionstatus/v1/query', $data);
 
         return $response;
 
     }
 
-  /**
+    /**
      * Use this function to initiate a reversal request
      * @param $mpesa_code | Unique Id received with every transaction response.
      * @param $amount | Amount
@@ -341,37 +349,41 @@ class Mpesa
             'Occasion' => $occasion,
         );
 
-        $response = $this->makeCall('/mpesa/reversal/v1/request', $data, is_initial:true);
+        $response = $this->makeCall('/mpesa/reversal/v1/request', $data);
 
         return $response;
 
     }
 
-    public function makeCall($url_path, $data = [], $token = false, $is_initial = false)
+    public function makeCall($url_path, $data = [], $token = false, $is_initial = false, $recall = 0)
     {
 
+        $return_url = Config::get("mpesa.accounts.return_url");
         $sandbox = Config::get("mpesa.accounts.$this->slug.sandbox");
         $consumer_secret = Config::get("mpesa.accounts.$this->slug.consumer_secret");
         $consumer_key = Config::get("mpesa.accounts.$this->slug.consumer_key");
 
-        $url = ($sandbox) ? 'https://api.safaricom.co.ke' : 'https://sandbox.safaricom.co.ke';
+        $url = ($sandbox) ? 'https://sandbox.safaricom.co.ke' : 'https://api.safaricom.co.ke';
 
         $token = $token ? $token : $this->token;
         $url = $url . '/' . ltrim($url_path, '/');
 
         if (!isset($consumer_key) || !isset($consumer_secret)) {
-            throw new Exception("Please declare the consumer key and consumer secret as defined in the documentation", 1);
+            throw new \Exception("Please declare the consumer key and consumer secret as defined in the documentation", 1);
         }
 
-        if (!$this->token && !$token) {
-            throw new Exception("Token was not fetched.", 1);
+        if (!empty($data)) {
+            if (!$this->token && !$token) {
+                throw new \Exception("Token was not fetched.", 1);
+            }
         }
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
         $credentials = base64_encode($consumer_key . ':' . $consumer_secret);
+
+        $curl = curl_init($url);
+
         if ($is_initial) {
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Basic ' . $credentials)); //setting a custom header
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Basic ' . $credentials]);
         } else {
             curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json', 'Authorization:Bearer ' . $token));
         }
@@ -389,7 +401,24 @@ class Mpesa
 
         $curl_response = curl_exec($curl);
 
-        return json_decode($curl_response, true);
+        if (curl_errno($curl)) {
+            throw new \Exception("MPesa API call Error:$error_msg url:$url credentials:$credentials", 1);
+        }
+
+        curl_close($curl);
+
+        $result = json_decode($curl_response);
+
+        if (isset($result->errorMessage) && $result->errorMessage == 'Invalid Access Token') {
+            if ($recall < 2) {
+                return $this->makeCall($url_path, $data, $token, $is_initial, $recall);
+            }
+            $recall = $recall + 1;
+        }elseif (isset($result->errorCode)) {
+            throw new \Exception($result->errorMessage, 1);
+        }
+
+        return $result;
 
     }
 

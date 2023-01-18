@@ -3,8 +3,8 @@
 namespace Modules\Mpesa\Classes;
 
 use App\Models\User;
-use Modules\Partner\Entities\Partner;
 use Modules\Mpesa\Entities\Gateway as DBGateway;
+use Modules\Partner\Entities\Partner;
 
 class Gateway
 {
@@ -22,7 +22,7 @@ class Gateway
 
             if ($data['partner']) {
                 $data['user'] = User::where(['email' => $data['partner']->email])->first();
-                $data['phone'] =$data['user']->phone;
+                $data['phone'] = $data['user']->phone;
             }
         }
 
@@ -33,16 +33,24 @@ class Gateway
 
             $data['gateway'] = $gateway;
 
-            if($gateway->type =='stkpush'){
-                $stkpush = view('mpesa::stkpush', $data)->toHtml();
-                $tabs[] = ['title' => 'STK Push', 'slug' => 'STKPUSH', 'html' => $stkpush];
-            } else if($gateway->type =='tillno'){
-                $tillno = view('mpesa::tillno', $data)->toHtml();
-                $tabs[] = ['title' => 'Till No', 'slug' => 'TILLNO', 'html' => $tillno];
-            } else if($gateway->type =='paybill'){
-                $paybill = view('mpesa::paybill', $data)->toHtml();
-                $tabs[] = ['title' => 'Paybill', 'slug' => 'PAYBILL', 'html' => $paybill];
+            if ($gateway->type == 'paybill') {
+                if ($gateway->method == 'stkpush') {
+                    $stkpush = view('mpesa::stkpush', $data)->toHtml();
+                    $tabs[] = ['title' => 'STK Push', 'slug' => 'STKPUSH', 'gateway' => $gateway, 'html' => $stkpush];
+                } else {
+                    $paybill = view('mpesa::paybill', $data)->toHtml();
+                    $tabs[] = ['title' => 'Paybill', 'slug' => 'PAYBILL', 'gateway' => $gateway, 'html' => $paybill];
+                }
+            } elseif ($gateway->type == 'tillno') {
+                if ($gateway->method == 'stkpush') {
+                    $stkpush = view('mpesa::stkpush', $data)->toHtml();
+                    $tabs[] = ['title' => 'STK Push', 'slug' => 'STKPUSH', 'gateway' => $gateway, 'html' => $stkpush];
+                } else {
+                    $paybill = view('mpesa::tillno', $data)->toHtml();
+                    $tabs[] = ['title' => 'Till No', 'slug' => 'TILLNO', 'gateway' => $gateway, 'html' => $tillno];
+                }
             }
+
         }
 
         return $tabs;

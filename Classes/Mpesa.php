@@ -3,6 +3,7 @@
 namespace Modules\Mpesa\Classes;
 
 use Config;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Modules\Account\Classes\Ledger;
 use Modules\Account\Classes\Payment;
@@ -13,18 +14,31 @@ use Modules\Mpesa\Entities\Webhook as DBWebhook;
 
 class Mpesa
 {
+
+    public $slug;
+
+    public function __construct($slug = '')
+    {
+        if ($slug == '') {
+            $this->slug = Config::get('mpesa.default');
+        } else {
+            $this->slug = $slug;
+        }
+
+        $this->setup();
+    }
+
     public function setup()
     {
+        $return_url = rtrim(URL::to(''), '/');
 
-        $return_url = url()->rtrim('/');
+        $confirmation_url = $return_url . '/safaricom/confirm';
+        $validation_url = $return_url . '/safaricom/validate';
+        $stkpush_url = $return_url . '/safaricom/stkpush';
+        $reversal_queue_url = $return_url . '/safaricom/reversal_queue';
+        $reversal_result_url = $return_url . '/safaricom/reversal_result';
 
-        $confirmation_url = $return_url . '/mpesa/confirm';
-        $validation_url = $return_url . '/mpesa/validate';
-        $stkpush_url = $return_url . '/mpesa/stkpush';
-        $reversal_queue_url = $return_url . '/mpesa/reversal_queue';
-        $reversal_result_url = $return_url . '/mpesa/reversal_result';
-
-        Config::set("mpesa.default", $gateway->slug);
+        Config::set("mpesa.accounts.return_url", $return_url);
         Config::set("mpesa.accounts.confirmation_url", $confirmation_url);
         Config::set("mpesa.accounts.validation_url", $validation_url);
         Config::set("mpesa.accounts.stkpush_url", $stkpush_url);
@@ -58,16 +72,14 @@ class Mpesa
             }
 
             if ($gateway->method == 'sending') {
-                
+
                 $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $gateway->shortcode, 'slug' => $gateway->slug])->first();
 
                 if (!$webhook) {
                     try {
-                        $response = Registrar::register($gateway->shortcode)
-                            ->usingAccount($gateway->slug)
-                            ->onConfirmation($confirmation_url)
-                            ->onValidation($validation_url)
-                            ->submit();
+                        $mpesacall = new MpesaCall($gateway->slug);
+
+                        $response = $mpesacall->registerUrl();
 
                         if ($response->ResponseCode == 0) {
                             DBWebhook::create(['confirmation_url' => $confirmation_url, 'validation_url' => $validation_url, 'shortcode' => $gateway->shortcode, 'slug' => $gateway->slug, 'published' => true]);
@@ -86,7 +98,6 @@ class Mpesa
 
     public function simulate($phone, $amount, $slug)
     {
-        $this->setup();
 
         $phone = $this->getPhone($phone);
         $amount = $this->getAmount($amount);
@@ -114,9 +125,8 @@ class Mpesa
         return false;
     }
 
-    public function stkpush($phone, $amount, $slug, $command = 'paybill')
+    public function stkpush($phone, $amount, $desc, $account, $command = 'paybill')
     {
-        $this->setup();
 
         $phone = $this->getPhone($phone);
         $amount = $this->getAmount($amount);
@@ -124,30 +134,22 @@ class Mpesa
 
         $response = '';
 
-        if ($command == 'buygood') {
-            $response = STK::request($amount)
-                ->from($phone)
-                ->usingReference($slug, 'Account Slug')
-                ->setCommand(STK::CUSTOMER_BUYGOODS_ONLINE)
-                ->push();
-        } else {
-            $response = STK::request($amount)
-                ->from($phone)
-                ->usingReference($slug, 'Account Slug')
-                ->push();
-        }
+        $mpesa_call = new MpesaCall($this->slug);
+
+        $response = $mpesa_call->stkPush($amount, $phone, $account, $desc);
+
+        print_r($response); exit;
 
         if (!isset($response->errorCode) && $response->ResponseCode == 0) {
             $stkpush = DBStkpush::create(
                 [
                     'amount' => $amount,
                     'phone' => $phone,
-                    'reference' => $slug,
-                    'description' => $slug,
+                    'reference' => $desc,
+                    'description' => $desc,
                     'command' => $command,
                     'merchant_request_id' => $response->MerchantRequestID,
                     'checkout_request_id' => $response->CheckoutRequestID,
-                    'command' => $command,
                     'gateway_id' => $gateway_id,
                 ]
             );
@@ -162,8 +164,6 @@ class Mpesa
     {
         $payment = new Payment();
         $ledger_cls = new Ledger();
-
-        $this->setup();
 
         $partner_id = $invoice->partner_id;
         $title = $invoice->title;
