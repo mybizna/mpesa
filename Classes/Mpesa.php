@@ -11,6 +11,8 @@ use Modules\Mpesa\Entities\Gateway as DBGateway;
 use Modules\Mpesa\Entities\Simulate as DBSimulate;
 use Modules\Mpesa\Entities\Stkpush as DBStkpush;
 use Modules\Mpesa\Entities\Webhook as DBWebhook;
+use SmoDav\Mpesa\Laravel\Facades\Simulate;
+use SmoDav\Mpesa\Laravel\Facades\STK;
 
 class Mpesa
 {
@@ -49,23 +51,19 @@ class Mpesa
 
         foreach ($gateways as $key => $gateway) {
 
-            $new_validation_url = $validation_url;
+            if (!$gateway->published) {
+                continue;
+            }
 
-            Config::set("mpesa.accounts.$gateway->slug.type", $gateway->type);
-            Config::set("mpesa.accounts.$gateway->slug.method", $gateway->method);
-            Config::set("mpesa.accounts.$gateway->slug.consumer_key", $gateway->consumer_key);
-            Config::set("mpesa.accounts.$gateway->slug.consumer_secret", $gateway->consumer_secret);
-            Config::set("mpesa.accounts.$gateway->slug.initiator_name", $gateway->initiator_name);
-            Config::set("mpesa.accounts.$gateway->slug.initiator_password", $gateway->initiator_password);
-            Config::set("mpesa.accounts.$gateway->slug.party_a", $gateway->party_a);
-            Config::set("mpesa.accounts.$gateway->slug.party_b", $gateway->party_b);
-            Config::set("mpesa.accounts.$gateway->slug.phone_number", $gateway->phone_number);
-            Config::set("mpesa.accounts.$gateway->slug.business_shortcode", $gateway->business_shortcode);
-            Config::set("mpesa.accounts.$gateway->slug.passkey", $gateway->passkey);
-            Config::set("mpesa.accounts.$gateway->slug.ledger_id", $gateway->ledger_id);
             Config::set("mpesa.accounts.$gateway->slug.sandbox", $gateway->sandbox);
-            Config::set("mpesa.accounts.$gateway->slug.default", $gateway->default);
-            Config::set("mpesa.accounts.$gateway->slug.published", $gateway->published);
+            Config::set("mpesa.accounts.$gateway->slug.key", $gateway->consumer_key);
+            Config::set("mpesa.accounts.$gateway->slug.secret", $gateway->consumer_secret);
+            Config::set("mpesa.accounts.$gateway->slug.initiator", $gateway->initiator_name);
+            Config::set("mpesa.accounts.$gateway->slug.id_validation_callback", $validation_url);
+            Config::set("mpesa.accounts.$gateway->slug.lnmo.paybill", $gateway->party_a);
+            Config::set("mpesa.accounts.$gateway->slug.lnmo.shortcode", $gateway->business_shortcode);
+            Config::set("mpesa.accounts.$gateway->slug.lnmo.passkey", $gateway->passkey);
+            Config::set("mpesa.accounts.$gateway->slug.lnmo.callback", $confirmation_url);
 
             if ($gateway->default) {
                 Config::set("mpesa.default", $gateway->slug);
@@ -73,7 +71,7 @@ class Mpesa
 
             if ($gateway->method == 'sending') {
 
-                $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $gateway->shortcode, 'slug' => $gateway->slug])->first();
+                $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $gateway->business_shortcode])->first();
 
                 if (!$webhook) {
                     try {
@@ -82,14 +80,13 @@ class Mpesa
                         $response = $mpesacall->registerUrl();
 
                         if ($response->ResponseCode == 0) {
-                            DBWebhook::create(['confirmation_url' => $confirmation_url, 'validation_url' => $validation_url, 'shortcode' => $gateway->shortcode, 'slug' => $gateway->slug, 'published' => true]);
+                            DBWebhook::create(['confirmation_url' => $confirmation_url, 'validation_url' => $validation_url, 'shortcode' => $gateway->business_shortcode, 'slug' => $gateway->slug, 'published' => true]);
                         }
-                    } catch (\Throwable$th) {
+
+                    } catch (\Throwable $th) {
                         //throw $th;
                     }
-
                 }
-
             }
 
         }
@@ -105,7 +102,8 @@ class Mpesa
 
         $response = Simulate::request($amount)
             ->from($phone)
-            ->usingReference($slug)
+            ->usingAccount($this->slug)
+            ->usingReference('Some Reference')
             ->push();
 
         if (!isset($response->errorCode) && $response->ResponseCode == 0) {
@@ -136,9 +134,11 @@ class Mpesa
 
         $mpesa_call = new MpesaCall($this->slug);
 
-        $response = $mpesa_call->stkPush($amount, $phone, $account, $desc);
-
-        print_r($response); exit;
+        $response = STK::request($amount)
+            ->from($phone)
+            ->usingAccount($this->slug)
+            ->usingReference(substr($account, 0, 12), substr($desc, 0, 12))
+            ->push();
 
         if (!isset($response->errorCode) && $response->ResponseCode == 0) {
             $stkpush = DBStkpush::create(

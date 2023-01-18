@@ -73,11 +73,11 @@
                 body: JSON.stringify({
                     phone: phone,
                     slug: '{{ $gateway->slug }}',
-                    shortcode: '{{ $gateway->shortcode }}',
+                    shortcode: '{{ $gateway->business_shortcode }}',
                     invoice_id: invoice_id,
                     account: account
                 })
-            })
+            }, 15000)
             .then((data) => {
                 console.log(data);
                 document.querySelector('#stkpush-verifying-message').style.display = "block";
@@ -104,7 +104,7 @@
                 body: JSON.stringify({
                     checkout_request_id: checkout_request_id
                 })
-            })
+            }, 15000)
             .then((data) => {
                 window.location.href = thankyou;
             })
