@@ -30,10 +30,13 @@
 
     <input id="stkpush_account" type="hidden" name="account" value="{{ $user->username }}" />
     <input id="stkpush_url" type="hidden" name="url" value="{{ secure_url(route('mpesa_stkpush')) }}" />
-    <input id="stkpush_isp_access_thankyou" type="hidden" name="isp_access_thankyou" value="{{ secure_url(route('isp_access_thankyou')) }}" />
+    <input id="stkpush_isp_access_thankyou" type="hidden" name="isp_access_thankyou"
+        value="{{ secure_url(route('isp_access_thankyou')) }}" />
 </div>
 
 <script>
+    var request_sent = false;
+    var checkout_request_id = '';
     var input = document.querySelector("#phone");
 
     window.intlTelInput(input, {
@@ -44,6 +47,8 @@
 
     document.querySelector('#stkpush_button').addEventListener('click', initializeSTKPush);
 
+    setInterval(validateSTKPush, 3000);
+
     function initializeSTKPush() {
 
         let phone = document.querySelector('#phone').value;
@@ -51,6 +56,8 @@
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         let url = document.querySelector('#stkpush_url').value;
         let account = document.querySelector('#stkpush_account').value;
+
+        document.querySelector('#stkpush-verifying-message').style.display = "block";
 
         if (phone != '') {
             phone = parseInt(phone);
@@ -77,20 +84,32 @@
                     invoice_id: invoice_id,
                     account: account
                 })
-            }, 15000)
+            })
+            .then(response => response.json())
             .then((data) => {
-                console.log(data);
-                document.querySelector('#stkpush-verifying-message').style.display = "block";
-                setInterval(validateSTKPush, 2000);
+                request_sent = true;
+                checkout_request_id = data.stkpush.checkout_request_id;
             })
             .catch(function(error) {
                 console.log(error);
             });
     }
 
-    function validateSTKPush(checkout_request_id) {
 
+    function validateSTKPush() {
+
+        console.log('validateSTKPush');
+        if(!request_sent && checkout_request_id != ''){
+            return false;
+        }
+
+        console.log(checkout_request_id);
+
+        let phone = document.querySelector('#phone').value;
+        let url = document.querySelector('#stkpush_url').value;
         let thankyou = document.querySelector('#stkpush_isp_access_thankyou').value;
+        let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        let invoice_id = document.querySelector('#invoice_id').value;
 
         fetch(url, {
                 headers: {
@@ -102,11 +121,20 @@
                 method: 'post',
                 credentials: "same-origin",
                 body: JSON.stringify({
-                    checkout_request_id: checkout_request_id
+                    phone: phone,
+                    slug: '{{ $gateway->slug }}',
+                    checkout_request_id: checkout_request_id,
+                    verifying: true,
+                    invoice_id: invoice_id
                 })
-            }, 15000)
+            })
+
+            .then(response => response.json())
             .then((data) => {
-                window.location.href = thankyou;
+                if (data.verified) {
+                    window.location.href = thankyou;
+                } else {
+                }
             })
             .catch(function(error) {
                 console.log(error);

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Modules\Account\Classes\Ledger;
 use Modules\Account\Classes\Payment;
+use Modules\Account\Entities\Gateway as DBAccGateway;
 use Modules\Mpesa\Entities\Gateway as DBGateway;
 use Modules\Mpesa\Entities\Simulate as DBSimulate;
 use Modules\Mpesa\Entities\Stkpush as DBStkpush;
@@ -75,15 +76,18 @@ class Mpesa
 
                 if (!$webhook) {
                     try {
-                        $mpesacall = new MpesaCall($gateway->slug);
 
-                        $response = $mpesacall->registerUrl();
+                        $response = Registrar::register(600000)
+                            ->usingAccount($gateway->slug)
+                            ->onConfirmation($confirmation_url)
+                            ->onValidation($validation_url)
+                            ->submit();
 
                         if ($response->ResponseCode == 0) {
                             DBWebhook::create(['confirmation_url' => $confirmation_url, 'validation_url' => $validation_url, 'shortcode' => $gateway->business_shortcode, 'slug' => $gateway->slug, 'published' => true]);
                         }
 
-                    } catch (\Throwable $th) {
+                    } catch (\Throwable$th) {
                         //throw $th;
                     }
                 }
@@ -132,8 +136,6 @@ class Mpesa
 
         $response = '';
 
-        $mpesa_call = new MpesaCall($this->slug);
-
         $response = STK::request($amount)
             ->from($phone)
             ->usingAccount($this->slug)
@@ -170,22 +172,35 @@ class Mpesa
         $amount = $invoice->total;
         $invoice_id = $invoice->id;
 
-        $response = STK::validate($checkout_request_id);
+        $stkpush = DBStkpush::where('checkout_request_id', $checkout_request_id)->first();
 
-        if (!isset($response->errorCode) && $response->ResultCode == 0) {
-
+        if ($stkpush->successful) {
             $ledger = $ledger_cls->getLedgerBySlug('mpesa');
-
-            $stkpush = DBStkpush::where('checkout_request_id', $checkout_request_id)->first();
-            $stkpush->completed = true;
-            $stkpush->successful = true;
-            $stkpush->save();
+            $gateway = DBAccGateway::where('slug', 'mpesa')->first();
 
             $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
 
-            $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, ledger_id:$ledger->id, invoice_id:$invoice_id);
+            $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, invoice_id:$invoice_id);
 
             return $payment_data;
+        } else {
+            $response = STK::validate($checkout_request_id);
+
+            if (!isset($response->errorCode) && $response->ResultCode == 0) {
+
+                $ledger = $ledger_cls->getLedgerBySlug('mpesa');
+
+                $stkpush->completed = true;
+                $stkpush->successful = true;
+                $stkpush->save();
+
+                $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
+
+                $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, ledger_id:$ledger->id, invoice_id:$invoice_id);
+
+                return $payment_data;
+            }
+
         }
 
         return false;

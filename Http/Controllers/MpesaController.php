@@ -3,9 +3,10 @@
 namespace Modules\Mpesa\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Account\Entities\Invoice as DBInvoice;
 use Modules\Base\Http\Controllers\BaseController;
 use Modules\Mpesa\Classes\Mpesa;
-use Modules\Account\Entities\Invoice as DBInvoice;
+use Illuminate\Support\Facades\Log;
 
 class MpesaController extends BaseController
 {
@@ -16,14 +17,23 @@ class MpesaController extends BaseController
         return response()->json($result);
     }
 
-    public function callback(Request $request)
+   
+    public function validate(Request $request)
     {
+
+        $data = $request->all();
+        error_log(json_encode($data));
+        Log::info(json_encode($data));
         $result = [];
+        
         return response()->json($result);
     }
-
     public function confirm(Request $request)
     {
+
+        $data = $request->all();
+        error_log(json_encode($data));
+        Log::info(json_encode($data));
         $result = [];
 
         return response()->json($result);
@@ -60,9 +70,9 @@ class MpesaController extends BaseController
 
     public function stkpush(Request $request)
     {
-        
+
         $data = $request->all();
-        
+
         $mpesa = new Mpesa($data['slug']);
 
         $invoice = DBInvoice::where(['id' => $data['invoice_id']])->first();
@@ -77,7 +87,12 @@ class MpesaController extends BaseController
             }
         } else {
             $stkpush = $mpesa->stkpush($data['phone'], $invoice->total, $invoice->title, $data['account']);
-            $data['stkpush'] = $stkpush;
+            $data['stkpush'] = [
+                'checkout_request_id' => $stkpush->checkout_request_id,
+                'id' => $stkpush->id,
+                'command' => $stkpush->command,
+                'merchant_request_id' => $stkpush->merchant_request_id,
+            ];
 
             if ($stkpush) {
                 $data['request_sent'] = 1;
@@ -90,9 +105,5 @@ class MpesaController extends BaseController
 
     }
 
-    public function validate(Request $request)
-    {
-        $result = [];
-        return response()->json($result);
-    }
+  
 }
