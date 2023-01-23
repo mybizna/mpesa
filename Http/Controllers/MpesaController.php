@@ -3,10 +3,10 @@
 namespace Modules\Mpesa\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Modules\Account\Entities\Invoice as DBInvoice;
 use Modules\Base\Http\Controllers\BaseController;
 use Modules\Mpesa\Classes\Mpesa;
-use Illuminate\Support\Facades\Log;
 
 class MpesaController extends BaseController
 {
@@ -17,23 +17,39 @@ class MpesaController extends BaseController
         return response()->json($result);
     }
 
-   
     public function validate(Request $request)
     {
 
         $data = $request->all();
+
         error_log(json_encode($data));
         Log::info(json_encode($data));
+
+        $path = realpath(base_path()) . '/storage/logs/safaricom_validate.txt';
+        touch($path);
+        chmod($path, 0775);
+        $fp = fopen($path, 'a');
+        fwrite($fp, json_encode($data) . PHP_EOL);
+        fclose($fp);
+
         $result = [];
-        
+
         return response()->json($result);
     }
     public function confirm(Request $request)
     {
 
         $data = $request->all();
+
         error_log(json_encode($data));
         Log::info(json_encode($data));
+
+        $path = realpath(base_path()) . '/storage/logs/safaricom_confirm.txt';
+        touch($path);
+        chmod($path, 0775);
+        $fp = fopen($path, 'a');
+        fwrite($fp, json_encode($data) . PHP_EOL);
+        fclose($fp);
         $result = [];
 
         return response()->json($result);
@@ -105,5 +121,4 @@ class MpesaController extends BaseController
 
     }
 
-  
 }

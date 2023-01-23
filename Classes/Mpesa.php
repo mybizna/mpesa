@@ -174,29 +174,21 @@ class Mpesa
 
         $stkpush = DBStkpush::where('checkout_request_id', $checkout_request_id)->first();
 
-        if ($stkpush->successful) {
-            $ledger = $ledger_cls->getLedgerBySlug('mpesa');
-            $gateway = DBAccGateway::where('slug', 'mpesa')->first();
-
-            $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
-
-            $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, invoice_id:$invoice_id);
-
-            return $payment_data;
-        } else {
+        if (!$stkpush->successful) {
             $response = STK::validate($checkout_request_id);
 
             if (!isset($response->errorCode) && $response->ResultCode == 0) {
 
                 $ledger = $ledger_cls->getLedgerBySlug('mpesa');
+                $gateway = DBAccGateway::where('slug', 'mpesa')->first();
+
+                $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
+
+                $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, invoice_id:$invoice_id);
 
                 $stkpush->completed = true;
                 $stkpush->successful = true;
                 $stkpush->save();
-
-                $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
-
-                $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, ledger_id:$ledger->id, invoice_id:$invoice_id);
 
                 return $payment_data;
             }
