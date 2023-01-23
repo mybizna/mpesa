@@ -14,6 +14,15 @@ class MpesaController extends BaseController
     public function simulate(Request $request)
     {
         $result = [];
+
+        $data = $request->all();
+
+        $slug = $data['slug']?? "paybill_express";
+
+        $mpesa = new Mpesa($slug);
+
+        $simulate = $mpesa->simulate($data['phone'], $data['amount'], $data['account']);
+
         return response()->json($result);
     }
 
@@ -44,12 +53,24 @@ class MpesaController extends BaseController
         error_log(json_encode($data));
         Log::info(json_encode($data));
 
-        $path = realpath(base_path()) . '/storage/logs/safaricom_confirm.txt';
-        touch($path);
-        chmod($path, 0775);
-        $fp = fopen($path, 'a');
-        fwrite($fp, json_encode($data) . PHP_EOL);
-        fclose($fp);
+        ['trans_type'=>$data['TransactionType'],  
+        'trans_id'=>$data['TransID'], 
+        'trans_time'=>$data['TransTime'], 
+        'trans_amount'=>$data['TransAmount'], 
+        'business_short_code'=>$data['BusinessShortCode'],  
+        'bill_ref_number'=>$data['BillRefNumber'], 
+        'invoice_number'=>$data['InvoiceNumber'], 
+        'org_account'=>$data['OrgAccountBalance'], 
+        'third_party_id'=>$data['ThirdPartyTransID'],
+         'msisdn'=>$data['MSISDN'], 
+         'first_name'=>$data['FirstName'], 
+         'middle_name'=>$data['MiddleName'], 
+         'last_name'=>$data['LastName'],
+         'published'=>1
+        ];
+
+
+
         $result = [];
 
         return response()->json($result);

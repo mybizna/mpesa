@@ -35,11 +35,11 @@ class Mpesa
     {
         $return_url = rtrim(URL::to(''), '/');
 
-        $confirmation_url = $return_url . '/safaricom/confirm';
-        $validation_url = $return_url . '/safaricom/validate';
-        $stkpush_url = $return_url . '/safaricom/stkpush';
-        $reversal_queue_url = $return_url . '/safaricom/reversal_queue';
-        $reversal_result_url = $return_url . '/safaricom/reversal_result';
+        $confirmation_url = $return_url . '/kemomo/confirm';
+        $validation_url = $return_url . '/kemomo/validate';
+        $stkpush_url = $return_url . '/kemomo/stkpush';
+        $reversal_queue_url = $return_url . '/kemomo/reversal_queue';
+        $reversal_result_url = $return_url . '/kemomo/reversal_result';
 
         Config::set("mpesa.accounts.return_url", $return_url);
         Config::set("mpesa.accounts.confirmation_url", $confirmation_url);
@@ -49,6 +49,7 @@ class Mpesa
         Config::set("mpesa.accounts.reversal_result_url", $reversal_result_url);
 
         $gateways = DBGateway::where(['published' => true])->get();
+
 
         foreach ($gateways as $key => $gateway) {
 
@@ -97,7 +98,7 @@ class Mpesa
 
     }
 
-    public function simulate($phone, $amount, $slug)
+    public function simulate($phone, $amount, $account)
     {
 
         $phone = $this->getPhone($phone);
@@ -107,8 +108,10 @@ class Mpesa
         $response = Simulate::request($amount)
             ->from($phone)
             ->usingAccount($this->slug)
-            ->usingReference('Some Reference')
+            ->usingReference($account)
             ->push();
+
+        print_r($response); exit;
 
         if (!isset($response->errorCode) && $response->ResponseCode == 0) {
             DBSimulate::create(
