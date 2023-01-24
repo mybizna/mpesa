@@ -9,9 +9,12 @@ use Modules\Account\Classes\Ledger;
 use Modules\Account\Classes\Payment;
 use Modules\Account\Entities\Gateway as DBAccGateway;
 use Modules\Mpesa\Entities\Gateway as DBGateway;
+use Modules\Mpesa\Entities\Payment as DBPayment;
 use Modules\Mpesa\Entities\Simulate as DBSimulate;
 use Modules\Mpesa\Entities\Stkpush as DBStkpush;
 use Modules\Mpesa\Entities\Webhook as DBWebhook;
+use Modules\Partner\Entities\Slug as PartnerSlug;
+use SmoDav\Mpesa\Laravel\Facades\Registrar;
 use SmoDav\Mpesa\Laravel\Facades\Simulate;
 use SmoDav\Mpesa\Laravel\Facades\STK;
 
@@ -50,7 +53,6 @@ class Mpesa
 
         $gateways = DBGateway::where(['published' => true])->get();
 
-
         foreach ($gateways as $key => $gateway) {
 
             if (!$gateway->published) {
@@ -73,23 +75,25 @@ class Mpesa
 
             if ($gateway->method == 'sending') {
 
-                $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $gateway->business_shortcode])->first();
+                $shortcode = $gateway->business_shortcode;
 
+                $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $shortcode])->first();
+               
                 if (!$webhook) {
                     try {
 
-                        $response = Registrar::register(600000)
+                        $response = Registrar::register($shortcode)
                             ->usingAccount($gateway->slug)
                             ->onConfirmation($confirmation_url)
                             ->onValidation($validation_url)
                             ->submit();
 
                         if ($response->ResponseCode == 0) {
-                            DBWebhook::create(['confirmation_url' => $confirmation_url, 'validation_url' => $validation_url, 'shortcode' => $gateway->business_shortcode, 'slug' => $gateway->slug, 'published' => true]);
+                            DBWebhook::create(['confirmation_url' => $confirmation_url, 'validation_url' => $validation_url, 'shortcode' => $shortcode, 'slug' => $gateway->slug, 'published' => true]);
                         }
 
                     } catch (\Throwable$th) {
-                        //throw $th;
+                        throw $th;
                     }
                 }
             }
@@ -98,36 +102,45 @@ class Mpesa
 
     }
 
-    public function simulate($phone, $amount, $account)
+    public function savePayment($data)
     {
 
-        $phone = $this->getPhone($phone);
-        $amount = $this->getAmount($amount);
-        $gateway_id = $this->getGateway();
+        $save_data = ['trans_type' => $data['TransactionType'], 'trans_id' => $data['TransID'],
+            'trans_time' => $data['TransTime'], 'trans_amount' => $data['TransAmount'],
+            'business_short_code' => $data['BusinessShortCode'], 'bill_ref_number' => $data['BillRefNumber'],
+            'invoice_number' => $data['InvoiceNumber'], 'org_account' => $data['OrgAccountBalance'],
+            'third_party_id' => $data['ThirdPartyTransID'], 'msisdn' => $data['MSISDN'],
+            'first_name' => $data['FirstName'], 'middle_name' => $data['MiddleName'],
+            'last_name' => $data['LastName'], 'published' => 1,
+        ];
 
-        $response = Simulate::request($amount)
-            ->from($phone)
-            ->usingAccount($this->slug)
-            ->usingReference($account)
-            ->push();
+        $payment = DBPayment::updateOrCreate($save_data, ['trans_id' => $data['TransID']]);
 
-        print_r($response); exit;
+        if ($payment && !$payment->successful) {
 
-        if (!isset($response->errorCode) && $response->ResponseCode == 0) {
-            DBSimulate::create(
-                [
-                    'amount' => $amount,
-                    'phone' => $phone,
-                    'reference' => $slug,
-                    'description' => $slug,
-                    'gateway_id' => $gateway_id,
-                ]
-            );
+            $payment_cls = new Payment();
+            $ledger_cls = new Ledger();
 
-            return true;
+            $ledger = $ledger_cls->getLedgerBySlug('mpesa');
+            $gateway = DBAccGateway::where('slug', 'mpesa')->first();
+            $partner_slug = PartnerSlug::where('slug', $payment->bill_ref_number)->first();
+
+            if ($partner_slug) {
+                $partner_id = $partner_slug->id;
+                $account = $partner_slug->slug;
+                $phone = $payment->msisdn;
+                $amount = $payment->trans_amount;
+
+                $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $account;
+
+                $payment_data = $payment_cls->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id);
+
+                $payment->completed = true;
+                $payment->successful = true;
+                $payment->save();
+            }
         }
 
-        return false;
     }
 
     public function stkpush($phone, $amount, $desc, $account, $command = 'paybill')
@@ -207,6 +220,35 @@ class Mpesa
         $amount = $this->getAmount($amount);
 
         $this->stkpush($phone, $amount, $slug, );
+    }
+    public function simulate($phone, $amount, $account)
+    {
+
+        $phone = $this->getPhone($phone);
+        $amount = $this->getAmount($amount);
+        $gateway_id = $this->getGateway();
+
+        $response = Simulate::request($amount)
+            ->from($phone)
+            ->usingAccount($this->slug)
+            ->usingReference($account)
+            ->push();
+
+        if (!isset($response->errorCode) && $response->ResponseCode == 0) {
+            DBSimulate::create(
+                [
+                    'amount' => $amount,
+                    'phone' => $phone,
+                    'reference' => $account,
+                    'description' => $account,
+                    'gateway_id' => $gateway_id,
+                ]
+            );
+
+        }
+
+        return $response;
+
     }
 
     public function getAmount($amount)

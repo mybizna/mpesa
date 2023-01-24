@@ -9,8 +9,8 @@ $payment = new Payment();
 $mpesa_ledger = $ledger->getLedgerBySlug('mpesa');
 $mpesa_gateway = $payment->getGatewayBySlug('mpesa');
 
-$mpesa_ledger_id = $mpesa_ledger->id;
-$mpesa_gateway_id = $mpesa_gateway->id;
+$mpesa_ledger_id = (isset($mpesa_ledger->id)) ? $mpesa_ledger->id : 3;
+$mpesa_gateway_id = (isset($mpesa_ledger->id)) ? $mpesa_gateway->id : 7;
 
 return [
     'return_url' => [

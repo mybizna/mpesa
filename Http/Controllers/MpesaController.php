@@ -17,16 +17,19 @@ class MpesaController extends BaseController
 
         $data = $request->all();
 
-        $slug = $data['slug']?? "paybill_express";
+        error_log(json_encode($data));
+        Log::info(json_encode($data));
+
+        $slug = $data['slug'] ?? "paybill_express";
 
         $mpesa = new Mpesa($slug);
 
         $simulate = $mpesa->simulate($data['phone'], $data['amount'], $data['account']);
 
-        return response()->json($result);
+        return response()->json($simulate);
     }
 
-    public function validate(Request $request)
+    public function  validate(Request $request)
     {
 
         $data = $request->all();
@@ -53,27 +56,11 @@ class MpesaController extends BaseController
         error_log(json_encode($data));
         Log::info(json_encode($data));
 
-        ['trans_type'=>$data['TransactionType'],  
-        'trans_id'=>$data['TransID'], 
-        'trans_time'=>$data['TransTime'], 
-        'trans_amount'=>$data['TransAmount'], 
-        'business_short_code'=>$data['BusinessShortCode'],  
-        'bill_ref_number'=>$data['BillRefNumber'], 
-        'invoice_number'=>$data['InvoiceNumber'], 
-        'org_account'=>$data['OrgAccountBalance'], 
-        'third_party_id'=>$data['ThirdPartyTransID'],
-         'msisdn'=>$data['MSISDN'], 
-         'first_name'=>$data['FirstName'], 
-         'middle_name'=>$data['MiddleName'], 
-         'last_name'=>$data['LastName'],
-         'published'=>1
-        ];
+        $mpesa = new Mpesa();
 
+        $payment = $mpesa->savePayment($data);
 
-
-        $result = [];
-
-        return response()->json($result);
+        return response()->json($payment);
     }
     public function paybill(Request $request)
     {

@@ -44,7 +44,7 @@ class Gateway extends BaseModel
         $table->string('party_a');
         $table->string('party_b');
         $table->string('business_shortcode');
-        $table->string('phone_number');
+        $table->string('phone_number')->nullable();
         $table->enum('type', ['paybill', 'tillno'])->default('paybill')->nullable();
         $table->enum('method', ['sending', 'stkpush'])->default('sending')->nullable();
         $table->integer('ledger_id')->nullable();
