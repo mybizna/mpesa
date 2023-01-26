@@ -59,13 +59,15 @@ class Mpesa
                 continue;
             }
 
+            $shortcode = $gateway->party_a;
+
             Config::set("mpesa.accounts.$gateway->slug.sandbox", $gateway->sandbox);
             Config::set("mpesa.accounts.$gateway->slug.key", $gateway->consumer_key);
             Config::set("mpesa.accounts.$gateway->slug.secret", $gateway->consumer_secret);
             Config::set("mpesa.accounts.$gateway->slug.initiator", $gateway->initiator_name);
             Config::set("mpesa.accounts.$gateway->slug.id_validation_callback", $validation_url);
             Config::set("mpesa.accounts.$gateway->slug.lnmo.paybill", $gateway->party_a);
-            Config::set("mpesa.accounts.$gateway->slug.lnmo.shortcode", $gateway->business_shortcode);
+            Config::set("mpesa.accounts.$gateway->slug.lnmo.shortcode", $shortcode);
             Config::set("mpesa.accounts.$gateway->slug.lnmo.passkey", $gateway->passkey);
             Config::set("mpesa.accounts.$gateway->slug.lnmo.callback", $confirmation_url);
 
@@ -74,8 +76,6 @@ class Mpesa
             }
 
             if ($gateway->method == 'sending') {
-
-                $shortcode = $gateway->business_shortcode;
 
                 $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $shortcode])->first();
                
