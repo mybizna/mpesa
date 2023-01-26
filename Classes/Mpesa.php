@@ -135,7 +135,7 @@ class Mpesa
 
                 $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $account;
 
-                $payment_data = $payment_cls->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id);
+                $payment_data = $payment_cls->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, code:$save_data['trans_id']);
 
                 $payment->completed = true;
                 $payment->successful = true;
@@ -202,7 +202,7 @@ class Mpesa
 
                 $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
 
-                $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, invoice_id:$invoice_id);
+                $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, invoice_id:$invoice_id, code:$checkout_request_id);
 
                 $stkpush->completed = true;
                 $stkpush->successful = true;
