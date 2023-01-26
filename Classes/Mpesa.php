@@ -13,7 +13,7 @@ use Modules\Mpesa\Entities\Payment as DBPayment;
 use Modules\Mpesa\Entities\Simulate as DBSimulate;
 use Modules\Mpesa\Entities\Stkpush as DBStkpush;
 use Modules\Mpesa\Entities\Webhook as DBWebhook;
-use Modules\Partner\Entities\Slug as PartnerSlug;
+use Modules\Partner\Classes\Partner;
 use SmoDav\Mpesa\Laravel\Facades\Registrar;
 use SmoDav\Mpesa\Laravel\Facades\Simulate;
 use SmoDav\Mpesa\Laravel\Facades\STK;
@@ -78,7 +78,7 @@ class Mpesa
             if ($gateway->method == 'sending') {
 
                 $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $shortcode])->first();
-               
+
                 if (!$webhook) {
                     try {
 
@@ -120,14 +120,16 @@ class Mpesa
 
             $payment_cls = new Payment();
             $ledger_cls = new Ledger();
+            $partner_cls = new Partner();
 
             $ledger = $ledger_cls->getLedgerBySlug('mpesa');
             $gateway = DBAccGateway::where('slug', 'mpesa')->first();
-            $partner_slug = PartnerSlug::where('slug', $payment->bill_ref_number)->first();
 
-            if ($partner_slug) {
-                $partner_id = $partner_slug->id;
-                $account = $partner_slug->slug;
+            $account = $payment->bill_ref_number;
+            $partner = $partner_cls->getPartner($payment->bill_ref_number);
+
+            if ($partner) {
+                $partner_id = $partner->id;
                 $phone = $payment->msisdn;
                 $amount = $payment->trans_amount;
 
