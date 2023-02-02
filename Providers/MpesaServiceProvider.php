@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Setting;
 use Modules\Mpesa\Entities\Gateway;
+use Illuminate\Support\Facades\Schema;
 
 class MpesaServiceProvider extends ServiceProvider
 {
@@ -36,6 +37,9 @@ class MpesaServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
+        if (Schema::hasTable('core_setting')) {
+            return;
+        }
 
         $db_setting = Setting::where(['module' => 'mpesa', 'name' => 'return_url'])->first();
         $gateways = Gateway::where(['published' => true])->get();
