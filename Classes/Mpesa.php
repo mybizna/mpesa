@@ -59,7 +59,7 @@ class Mpesa
                 continue;
             }
 
-            $shortcode = $gateway->party_a;
+            $shortcode = $gateway->business_shortcode;
 
             Config::set("mpesa.accounts.$gateway->slug.sandbox", $gateway->sandbox);
             Config::set("mpesa.accounts.$gateway->slug.key", $gateway->consumer_key);
@@ -147,12 +147,9 @@ class Mpesa
 
     public function stkpush($phone, $amount, $desc, $account, $command = 'paybill')
     {
-
         $phone = $this->getPhone($phone);
         $amount = $this->getAmount($amount);
         $gateway_id = $this->getGateway();
-
-        $response = '';
 
         $response = STK::request($amount)
             ->from($phone)
@@ -185,35 +182,51 @@ class Mpesa
         $payment = new Payment();
         $ledger_cls = new Ledger();
 
+        $successful = false;
+        $is_canceled = false;
         $partner_id = $invoice->partner_id;
         $title = $invoice->title;
         $amount = $invoice->total;
         $invoice_id = $invoice->id;
+        $payment_data = [];
 
         $stkpush = DBStkpush::where('checkout_request_id', $checkout_request_id)->first();
 
-        if (!$stkpush->successful) {
+        if (!$stkpush->completed) {
+
             $response = STK::validate($checkout_request_id);
 
-            if (!isset($response->errorCode) && $response->ResultCode == 0) {
+            if (!isset($response->errorCode)) {
 
-                $ledger = $ledger_cls->getLedgerBySlug('mpesa');
-                $gateway = DBAccGateway::where('slug', 'mpesa')->first();
+                if ($response->ResultCode == 0) {
+                    $ledger = $ledger_cls->getLedgerBySlug('mpesa');
+                    $gateway = DBAccGateway::where('slug', 'mpesa')->first();
 
-                $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
+                    $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
 
-                $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, invoice_id:$invoice_id, code:$checkout_request_id);
+                    $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, invoice_id:$invoice_id, code:$checkout_request_id);
 
-                $stkpush->completed = true;
-                $stkpush->successful = true;
-                $stkpush->save();
+                    $stkpush->completed = true;
+                    $stkpush->successful = true;
+                    $stkpush->save();
 
-                return $payment_data;
+                    $successful = true;
+
+                } elseif ($response->ResultCode == 1032) {
+
+                    $is_canceled = true;
+
+                    $stkpush->completed = true;
+                    $stkpush->successful = false;
+                    $stkpush->save();
+                    # code...
+                }
+
             }
 
         }
 
-        return false;
+        return ['successful' => $successful, 'is_canceled' => $is_canceled, 'payment' => $payment_data];
     }
 
     public function buygoods($phone, $amount, $slug)

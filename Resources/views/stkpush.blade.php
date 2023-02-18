@@ -9,7 +9,7 @@
             Phone Number
         </label>
         <input
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            class="shadow appearance-none border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="phone" value="{{ $phone }}" @if ($request_sent) readonly @endif name="phone"
             type="number" placeholder="Phone">
     </div>
@@ -32,6 +32,8 @@
     <input id="stkpush_url" type="hidden" name="url" value="{{ secure_url(route('mpesa_stkpush')) }}" />
     <input id="stkpush_isp_access_thankyou" type="hidden" name="isp_access_thankyou"
         value="{{ secure_url(route('isp_access_thankyou')) }}" />
+    <input id="stkpush_isp_access_canceled" type="hidden" name="isp_access_canceled"
+        value="{{ secure_url(route('isp_access_canceled')) }}" />
 </div>
 
 <script>
@@ -98,16 +100,14 @@
 
     function validateSTKPush() {
 
-        console.log('validateSTKPush');
-        if(!request_sent && checkout_request_id != ''){
+        if (!request_sent || checkout_request_id == '') {
             return false;
         }
-
-        console.log(checkout_request_id);
 
         let phone = document.querySelector('#phone').value;
         let url = document.querySelector('#stkpush_url').value;
         let thankyou = document.querySelector('#stkpush_isp_access_thankyou').value;
+        let canceled = document.querySelector('#stkpush_isp_access_canceled').value;
         let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         let invoice_id = document.querySelector('#invoice_id').value;
 
@@ -131,9 +131,10 @@
 
             .then(response => response.json())
             .then((data) => {
-                if (data.verified) {
+                if (data.successful) {
                     window.location.href = thankyou;
-                } else {
+                } else if (condition) {
+                    window.location.href = canceled;
                 }
             })
             .catch(function(error) {

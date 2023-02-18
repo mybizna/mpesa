@@ -29,7 +29,7 @@ class MpesaController extends BaseController
         return response()->json($simulate);
     }
 
-    public function  validate(Request $request)
+    public function validate(Request $request)
     {
 
         $data = $request->all();
@@ -103,25 +103,28 @@ class MpesaController extends BaseController
 
         if (isset($data['verifying']) && $data['verifying']) {
             $validate_stkpush = $mpesa->validateStkpush($data['checkout_request_id'], $data['phone'], $invoice);
-            if ($validate_stkpush) {
+            
+            if ($validate_stkpush['successful']) {
                 $data['validate_stkpush'] = $validate_stkpush;
                 $data['verified'] = 1;
             } else {
                 $data['verified'] = 0;
             }
+            
         } else {
-            $stkpush = $mpesa->stkpush($data['phone'], $invoice->total, $invoice->title, $data['account']);
-            $data['stkpush'] = [
-                'checkout_request_id' => $stkpush->checkout_request_id,
-                'id' => $stkpush->id,
-                'command' => $stkpush->command,
-                'merchant_request_id' => $stkpush->merchant_request_id,
-            ];
 
+            $stkpush = $mpesa->stkpush($data['phone'], $invoice->total, $invoice->title, $data['account']);
+
+            $request_sent = ($stkpush) ? 1 : 0;
+          
             if ($stkpush) {
-                $data['request_sent'] = 1;
-            } else {
-                $data['request_sent'] = 0;
+                $data['stkpush'] = [
+                    'checkout_request_id' => $stkpush->checkout_request_id,
+                    'id' => $stkpush->id,
+                    'request_sent' => $request_sent,
+                    'command' => $stkpush->command,
+                    'merchant_request_id' => $stkpush->merchant_request_id,
+                ];
             }
         }
 

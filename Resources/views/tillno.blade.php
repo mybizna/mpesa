@@ -48,7 +48,7 @@
             MPESA CODE
         </label>
         <input
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            class="shadow appearance-none border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="mpesa_code" name="mpesa_code" type="text" placeholder="MPesa Code">
     </div>
     <div style="text-align:center; margin-top:20px;">
