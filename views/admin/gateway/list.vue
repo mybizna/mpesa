@@ -1,53 +1,42 @@
 
 <template>
-    <table-render title="Mpesa Gateway" :path_param="path_param" :search_fields="search_fields" :model="model"
-        :table_fields="table_fields"></table-render>
+    <table-render :path_param="['mpesa', 'gateway']" title="Mpesa Gateway" :table_fields="table_fields">
+
+        <template #header>
+            <th-render>Name</th-render>
+            <th-render>Slug</th-render>
+            <th-render>Key</th-render>
+            <th-render>Secret</th-render>
+            <th-render>Type</th-render>
+            <th-render>Short Code</th-render>
+            <th-render>Paybill Till</th-render>
+            <th-render>Published</th-render>
+            <th-render>Default</th-render>
+        </template>
+
+        <template #body="{ item }">
+            <td>{{ item.title }}</td>
+            <td>{{ item.slug }}</td>
+            <td>{{ item.key }}</td>
+            <td>{{ item.secret }}</td>
+            <td>{{ item.type }}</td>
+            <td>{{ item.shortcode }}</td>
+            <td>{{ item.paybill_till }}</td>
+            <td>{{ item.published }}</td>
+            <td>{{ item.default }}</td>
+        </template>
+
+
+    </table-render>
 </template>
 
 
 <script>
 
 export default {
-    data () {
+    data() {
         return {
-            path_param: ["mpesa", "gateway"],
-            model: {
-                id: "",
-                title: "",
-                slug: "",
-                key: "",
-                secret: "",
-                initiator: "",
-                type: "",
-                passkey: "",
-                shortcode: "",
-                paybill_till: "",
-                ledger_id: "",
-                passkey: "",
-                description: "",
-                published: "",
-            },
-            search_fields: [
-                { type: "text", name: "title", label: "Title", ope: "", },
-                { type: "text", name: "slug", label: "Slug", ope: "", },
-                { type: "text", name: "key", label: "Key", ope: "", },
-                { type: "text", name: "initiator", label: "Initiator", ope: "", },
-                { type: "text", name: "shortcode", label: "Short Code", ope: "", },
-                { type: "text", name: "paybill_till", label: "Paybill Till", ope: "", },
-                { type: "text", name: "passkey", label: "Pass Key", ope: "", },
-                { type: "text", name: "published", label: "Published", ope: "", },
-            ],
-            table_fields: [
-                { text: "Title", prop: "title", name: "title", },
-                { text: "Slug", prop: "slug", name: "slug", },
-                { text: "Key", prop: "key", name: "key", },
-                { text: "Secret", prop: "secret", name: "secret", },
-                { text: "Type", prop: "type", name: "type", },
-                { text: "Short Code", prop: "shortcode", name: "shortcode", },
-                { text: "Paybill Till", prop: "paybill_till", name: "paybill_till", },
-                { text: "Published", prop: "published", name: "published", },
-                { text: "Default", prop: "default", name: "default", },
-            ],
+            table_fields: ['title', 'slug', 'key', 'secret', 'type', 'shortcode', 'paybill_till', 'published', 'default'],
         };
     }
 };
