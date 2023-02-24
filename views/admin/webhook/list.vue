@@ -17,7 +17,9 @@
             <td>{{ item.confirmation_url }}</td>
             <td>{{ item.paybill_till }}</td>
             <td>{{ item.shortcode }}</td>
-            <td>{{ item.published }}</td>
+            <td class="text-center">
+                <btn-status :status="item.published"></btn-status>
+            </td>
         </template>
 
     </table-render>

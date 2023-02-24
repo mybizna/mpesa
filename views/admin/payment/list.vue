@@ -20,7 +20,9 @@
             <td>{{ item.trans_id }}</td>
             <td>{{ item.bill_ref_number }}</td>
             <td>{{ item.invoice_number }}</td>
-            <td>{{ item.published }}</td>
+            <td class="text-center">
+                <btn-status :status="item.published"></btn-status>
+            </td>
         </template>
 
 </table-render>

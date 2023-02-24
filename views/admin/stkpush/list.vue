@@ -17,8 +17,12 @@
             <td>{{ item.reference }}</td>
             <td>{{ item.description }}</td>
             <td>{{ item.gateway_id }}</td>
-            <td>{{ item.completed }}</td>
-            <td>{{ item.successful }}</td>
+            <td class="text-center">
+                <btn-status :status="item.completed"></btn-status>
+            </td>
+            <td class="text-center">
+                <btn-status :status="item.successful"></btn-status>
+            </td>
         </template>
 
     </table-render>
