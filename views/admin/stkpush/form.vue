@@ -1,5 +1,5 @@
 <template>
-    <edit-renderrr :path_param="path_param" :model="model">
+    <edit-render :path_param="['mpesa', 'stkpush']" :model="model">
 
         <div class="row">
             <div class="col-md-6">
@@ -15,7 +15,7 @@
             </div>
         </div>
         
-    </edit-renderrr>
+    </edit-render>
 </template>
 
 <script>
@@ -24,7 +24,6 @@ export default {
     data () {
         return {
             id: null,
-            path_param: ["mpesa", "stkpush"],
             model: {
                 id: "",
                 amount: "",

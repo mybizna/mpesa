@@ -1,5 +1,5 @@
 <template>
-    <edit-renderrr :path_param="path_param" :model="model">
+    <edit-render :path_param="['mpesa', 'simulate']" :model="model">
 
         <div class="row">
             <div class="col-md-6">
@@ -7,7 +7,8 @@
                 <FormKit v-model="model.amount" label="Amount" id="amount" type="text" validation="required" />
                 <FormKit v-model="model.phone" label="Phone" id="phone" type="text" validation="required" />
                 <FormKit v-model="model.reference" label="Reference" id="reference" type="text" validation="required" />
-                <FormKit v-model="model.description" label="Description" id="description" type="text" validation="required" />
+                <FormKit v-model="model.description" label="Description" id="description" type="text"
+                    validation="required" />
             </div>
             <div class="col-md-6">
                 <FormKit v-model="model.gateway_id" label="Gateway" id="gateway_id" type="text" validation="required" />
@@ -15,16 +16,15 @@
                 <FormKit v-model="model.published" label="Published" id="published" type="switch" validation="required" />
             </div>
         </div>
-    </edit-renderrr>
+    </edit-render>
 </template>
 
 <script>
 export default {
-   
-    data () {
+
+    data() {
         return {
             id: null,
-            path_param: ["mpesa", "simulate"],
             model: {
                 id: "",
                 amount: "",
