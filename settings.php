@@ -1,13 +1,13 @@
 <?php
 
 use Modules\Account\Classes\Ledger;
-use Modules\Account\Classes\Payment;
+use Modules\Account\Classes\Gateway;
 
 $ledger = new Ledger();
-$payment = new Payment();
+$gateway = new Gateway();
 
 $mpesa_ledger = $ledger->getLedgerBySlug('mpesa');
-$mpesa_gateway = $payment->getGatewayBySlug('mpesa');
+$mpesa_gateway = $gateway->getGatewayBySlug('mpesa');
 
 $mpesa_ledger_id = (isset($mpesa_ledger->id)) ? $mpesa_ledger->id : 3;
 $mpesa_gateway_id = (isset($mpesa_ledger->id)) ? $mpesa_gateway->id : 7;

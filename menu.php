@@ -5,7 +5,8 @@ $this->add_module_info("mpesa", [
     'description' => 'Mpesa',
     'icon' => 'fas fa-sack-dollar',
     'path' => '/mpesa/admin/payment',
-    'class_str' => 'text-green border-green'
+    'class_str' => 'text-green border-green',
+    'position' => 3,
 ]);
 
 $this->add_menu("mpesa", "payment", "Payment", "/mpesa/admin/payment", "fas fa-cogs", 5);
