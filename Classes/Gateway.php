@@ -20,9 +20,9 @@ class Gateway
         if ($invoice->partner_id) {
             $data['partner'] = Partner::where(['id' => $invoice->partner_id])->first();
 
+            
             if ($data['partner']) {
-                $data['user'] = User::where(['email' => $data['partner']->email])->first();
-                $data['phone'] = $data['user']->phone;
+                $data['phone'] = $data['partner']->phone;
             }
         }
 

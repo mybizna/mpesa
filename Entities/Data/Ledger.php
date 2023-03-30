@@ -19,7 +19,7 @@ class Ledger
             "chart_id" => $asset_chart_id,
             "name" => "MPesa",
             "slug" => "mpesa",
-            "code" => "90",
+            "code" => "93",
             "system" => "0",
         ]);
 

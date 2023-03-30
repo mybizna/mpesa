@@ -49,7 +49,7 @@
                     clip-rule="evenodd"></path>
             </svg>
             <p>
-                Send to Account Name <b class="text-green-700">{{ $user->username }}</b>
+                Send to Account Name <b class="text-green-700">{{ $partner->phone }}</b>
             </p>
         </li>
     </ul>

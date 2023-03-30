@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <input id="stkpush_account" type="hidden" name="account" value="{{ $user->username }}" />
+    <input id="stkpush_account" type="hidden" name="account" value="{{ $partner->phone }}" />
     <input id="stkpush_url" type="hidden" name="url" value="{{ secure_url(route('mpesa_stkpush')) }}" />
     <input id="stkpush_isp_access_thankyou" type="hidden" name="isp_access_thankyou"
         value="{{ secure_url(route('isp_access_thankyou')) }}" />
