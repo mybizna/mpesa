@@ -23,6 +23,7 @@ class Gateway
             "ordering" => 0,
             "is_default" => false,
             "is_hidden" => false,
+            "is_hide_in_invoice" => false,
             "published" => true
         ]);
         
