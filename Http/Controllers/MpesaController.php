@@ -66,7 +66,8 @@ class MpesaController extends BaseController
     {
         $subscription = new Subscription();
 
-        $data = $subscription->processData($request);
+        //$data = $subscription->processData($request);
+        $data = Session::get('subscription_data');
 
         $result = $subscription->paybill($data);
 
@@ -81,7 +82,8 @@ class MpesaController extends BaseController
     {
         $subscription = new Subscription();
 
-        $data = $subscription->processData($request);
+       // $data = $subscription->processData($request);
+        $data = Session::get('subscription_data');
 
         $result = $subscription->tillno($data);
 
