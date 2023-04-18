@@ -20,7 +20,7 @@ class Gateway
             "ledger_id" => $ledger_id,
             "instruction" => "Mpesa",
             "module" => "Mpesa",
-            "ordering" => 0,
+            "ordering" => 4,
             "is_default" => false,
             "is_hidden" => false,
             "is_hide_in_invoice" => false,
