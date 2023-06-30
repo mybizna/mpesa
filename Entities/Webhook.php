@@ -35,6 +35,6 @@ class Webhook extends BaseModel
         $table->string('confirmation_url');
         $table->string('paybill_till');
         $table->string('shortcode');
-        $table->tinyInteger('published')->default(false);
+        $table->tinyInteger('published')->nullable()->default(0);
     }
 }

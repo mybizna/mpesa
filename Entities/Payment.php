@@ -43,8 +43,8 @@ class Payment extends BaseModel
         $table->string('first_name')->nullable();
         $table->string('middle_name')->nullable();
         $table->string('last_name')->nullable();
-        $table->tinyInteger('published')->default(false);
-        $table->tinyInteger('completed')->default(false);
-        $table->tinyInteger('successful')->default(false);
+        $table->tinyInteger('published')->nullable()->default(0);
+        $table->tinyInteger('completed')->nullable()->default(0);
+        $table->tinyInteger('successful')->nullable()->default(0);
     }
 }

@@ -36,7 +36,7 @@ class Simulate extends BaseModel
         $table->string('reference');
         $table->string('description');
         $table->integer('gateway_id')->nullable();
-        $table->tinyInteger('completed')->default(false);
-        $table->tinyInteger('successful')->default(false);
+        $table->tinyInteger('completed')->nullable()->default(0);
+        $table->tinyInteger('successful')->nullable()->default(0);
     }
 }

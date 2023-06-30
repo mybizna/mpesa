@@ -38,7 +38,7 @@ class Stkpush extends BaseModel
         $table->string('merchant_request_id')->nullable();
         $table->string('checkout_request_id')->nullable();
         $table->integer('gateway_id')->nullable();
-        $table->tinyInteger('completed')->default(false);
-        $table->tinyInteger('successful')->default(false);
+        $table->tinyInteger('completed')->nullable()->default(0);
+        $table->tinyInteger('successful')->nullable()->default(0);
     }
 }
