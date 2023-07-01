@@ -33,10 +33,16 @@ class Simulate extends BaseModel
         $table->increments('id');
         $table->string('amount');
         $table->string('phone');
-        $table->string('reference');
-        $table->string('description');
+        $table->string('reference')->nullable();
+        $table->string('description')->nullable();
         $table->integer('gateway_id')->nullable();
         $table->tinyInteger('completed')->nullable()->default(0);
         $table->tinyInteger('successful')->nullable()->default(0);
+    }
+
+
+    public function post_migration(Blueprint $table)
+    {
+        Migration::addForeign($table, 'mpesa_gateway', 'gateway_id');
     }
 }
