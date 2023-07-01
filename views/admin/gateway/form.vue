@@ -20,12 +20,24 @@
                 <FormKit v-model="model.initiator_password" label="Initiator Password" id="initiator_password" type="text"
                     validation="required" />
 
-                <FormKit v-model="model.type" label="Type" id="type" type="text" validation="required" />
-                <FormKit v-model="model.passkey" label="Pass Key" id="passkey" type="text" validation="required" />
-                <FormKit v-model="model.default" label="Default" id="default" type="switch" validation="required" />
-                <FormKit v-model="model.published" label="Published" id="published" type="switch" validation="required" />
-                <FormKit v-model="model.sandbox" label="Sandbox" id="sandbox" type="switch" validation="required" />
+                <FormKit v-model="model.type" label="Type" id="type" type="select" validation="required" :options="{
+                    paybill: 'Paybill',
+                    tillno: 'Till No',
+                }" />
+                <FormKit v-model="model.method" label="Method" id="method" type="select" validation="required" :options="{
+                    sending: 'Sending',
+                    stkpush: 'Stkpush',
+                }" />
 
+                <FormKit v-model="model.passkey" label="Pass Key" id="passkey" type="text" validation="required" />
+
+                <div class="grid grid-cols-2">
+                    <FormKit v-model="model.default" label="Default" id="default" type="switch" validation="required" />
+                    <FormKit v-model="model.published" label="Published" id="published" type="switch"
+                        validation="required" />
+                    <FormKit v-model="model.sandbox" label="Sandbox" id="sandbox" type="switch" validation="required" />
+
+                </div>
             </div>
 
             <div class="col-md-6">

@@ -174,7 +174,7 @@ class Mpesa
             return $stkpush;
         }
 
-        return false;
+        return $response;
     }
 
     public function validateStkpush($checkout_request_id, $phone, $invoice)
