@@ -3,6 +3,7 @@
 namespace Modules\Mpesa\Entities;
 
 use Modules\Base\Entities\BaseModel;
+use Modules\Base\Classes\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class Simulate extends BaseModel
