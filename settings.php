@@ -3,11 +3,15 @@
 use Modules\Account\Classes\Ledger;
 use Modules\Account\Classes\Gateway;
 
+if (!Schema::hasTable('account_ledger') || !Schema::hasTable('account_gateway')) {
+    return [];
+}
+
 $ledger = new Ledger();
 $gateway = new Gateway();
 
-$mpesa_ledger = $ledger->getLedgerBySlug('mpesa');
-$mpesa_gateway = $gateway->getGatewayBySlug('mpesa');
+$mpesa_ledger = @$ledger->getLedgerBySlug('mpesa');
+$mpesa_gateway = @$gateway->getGatewayBySlug('mpesa');
 
 $mpesa_ledger_id = (isset($mpesa_ledger->id)) ? $mpesa_ledger->id : 3;
 $mpesa_gateway_id = (isset($mpesa_ledger->id)) ? $mpesa_gateway->id : 7;
