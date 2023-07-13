@@ -14,7 +14,7 @@ $mpesa_ledger = @$ledger->getLedgerBySlug('mpesa');
 $mpesa_gateway = @$gateway->getGatewayBySlug('mpesa');
 
 $mpesa_ledger_id = (isset($mpesa_ledger->id)) ? $mpesa_ledger->id : 3;
-$mpesa_gateway_id = (isset($mpesa_ledger->id)) ? $mpesa_gateway->id : 7;
+$mpesa_gateway_id = (isset($mpesa_gateway->id)) ? $mpesa_gateway->id : 7;
 
 return [
     'return_url' => [
