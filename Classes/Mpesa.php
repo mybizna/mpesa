@@ -54,7 +54,7 @@ class Mpesa
         $gateways = DBGateway::where(['published' => true])->get();
 
         foreach ($gateways as $key => $gateway) {
-
+            
             if (!$gateway->published) {
                 continue;
             }
@@ -74,7 +74,7 @@ class Mpesa
             if ($gateway->default) {
                 Config::set("mpesa.default", $gateway->slug);
             }
-
+            
             if ($gateway->method == 'sending') {
 
                 $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $shortcode])->first();
@@ -156,6 +156,7 @@ class Mpesa
             ->usingAccount($this->slug)
             ->usingReference(substr($account, 0, 12), substr($desc, 0, 12))
             ->push();
+
 
         if (!isset($response->errorCode) && $response->ResponseCode == 0) {
             $stkpush = DBStkpush::create(

@@ -105,7 +105,7 @@ class MpesaController extends BaseController
 
         if (isset($data['verifying']) && $data['verifying']) {
             $validate_stkpush = $mpesa->validateStkpush($data['checkout_request_id'], $data['phone'], $invoice);
-            
+           
             if ($validate_stkpush['successful']) {
                 $data['validate_stkpush'] = $validate_stkpush;
                 $data['verified'] = 1;
@@ -116,7 +116,7 @@ class MpesaController extends BaseController
         } else {
 
             $stkpush = $mpesa->stkpush($data['phone'], $invoice->total, $invoice->title, $data['account']);
-
+            
             $request_sent = ($stkpush) ? 1 : 0;
           
             if ($stkpush) {
