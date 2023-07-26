@@ -2,9 +2,11 @@
 
 namespace Modules\Mpesa\Entities;
 
-use Modules\Base\Entities\BaseModel;
-use Modules\Base\Classes\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Modules\Base\Classes\Migration;
+use Modules\Base\Entities\BaseModel;
+use Modules\Core\Classes\Views\FormBuilder;
+use Modules\Core\Classes\Views\ListTable;
 
 class Simulate extends BaseModel
 {
@@ -15,7 +17,6 @@ class Simulate extends BaseModel
 
     protected $fillable = ['amount', 'phone', 'reference', 'description', 'gateway_id', 'completed', 'successful'];
 
-
     /**
      * The attributes that should be mutated to dates.
      *
@@ -23,6 +24,52 @@ class Simulate extends BaseModel
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+    public function listTable()
+    {
+        // listing view fields
+        $fields = new ListTable();
+
+        $fields->name('amount')->type('text')->ordering(true);
+        $fields->name('phone')->type('text')->ordering(true);
+        $fields->name('gateway_id')->type('recordpicker')->table('mpesa_gateway')->ordering(true);
+        $fields->name('completed')->type('switch')->ordering(true);
+        $fields->name('successful')->type('switch')->ordering(true);
+
+        return $fields;
+
+    }
+
+    public function formBuilder()
+    {
+        // listing view fields
+        $fields = new FormBuilder();
+
+        $fields->name('amount')->type('text')->group('w-1/2');
+        $fields->name('phone')->type('text')->group('w-1/2');
+        $fields->name('reference')->type('text')->group('w-1/2');
+        $fields->name('description')->type('text')->group('w-1/2');
+        $fields->name('gateway_id')->type('recordpicker')->table('mpesa_gateway')->group('w-1/2');
+        $fields->name('completed')->type('switch')->group('w-1/2');
+        $fields->name('successful')->type('switch')->group('w-1/2');
+
+        return $fields;
+
+    }
+
+    public function filter()
+    {
+        // listing view fields
+        $fields = new FormBuilder();
+
+        $fields->name('amount')->type('text')->group('w-1/6');
+        $fields->name('phone')->type('text')->group('w-1/6');
+        $fields->name('gateway_id')->type('recordpicker')->table('mpesa_gateway')->group('w-1/6');
+        $fields->name('completed')->type('switch')->group('w-1/6');
+        $fields->name('successful')->type('switch')->group('w-1/6');
+
+        return $fields;
+
+    }
     /**
      * List of fields for managing postings.
      *
@@ -40,7 +87,6 @@ class Simulate extends BaseModel
         $table->tinyInteger('completed')->nullable()->default(0);
         $table->tinyInteger('successful')->nullable()->default(0);
     }
-
 
     public function post_migration(Blueprint $table)
     {

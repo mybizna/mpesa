@@ -4,6 +4,8 @@ namespace Modules\Mpesa\Entities;
 
 use Illuminate\Database\Schema\Blueprint;
 use Modules\Base\Entities\BaseModel;
+use Modules\Core\Classes\Views\FormBuilder;
+use Modules\Core\Classes\Views\ListTable;
 
 class Payment extends BaseModel
 {
@@ -20,6 +22,79 @@ class Payment extends BaseModel
      * @var array
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function listTable()
+    {
+        // listing view fields
+        $fields = new ListTable();
+
+        $fields->name('trans_type')->type('text')->ordering(true);
+        $fields->name('trans_id')->type('text')->ordering(true);
+        $fields->name('first_name')->type('text')->ordering(true);
+        $fields->name('middle_name')->type('text')->ordering(true);
+        $fields->name('last_name')->type('text')->ordering(true);
+        $fields->name('trans_time')->type('text')->ordering(true);
+        $fields->name('trans_amount')->type('text')->ordering(true);
+        $fields->name('business_short_code')->type('text')->ordering(true);
+        $fields->name('bill_ref_number')->type('text')->ordering(true);
+        $fields->name('invoice_number')->type('text')->ordering(true);
+        $fields->name('org_account')->type('text')->ordering(true);
+        $fields->name('third_party_id')->type('text')->ordering(true);
+        $fields->name('msisdn')->type('text')->ordering(true);
+        $fields->name('completed')->type('switch')->ordering(true);
+        $fields->name('successful')->type('switch')->ordering(true);
+        $fields->name('published')->type('switch')->ordering(true);
+
+        return $fields;
+
+    }
+
+    public function formBuilder()
+    {
+        // listing view fields
+        $fields = new FormBuilder();
+
+        $fields->name('trans_type')->type('text')->group('w-1/2');
+        $fields->name('trans_id')->type('text')->group('w-1/2');
+        $fields->name('trans_time')->type('text')->group('w-1/2');
+        $fields->name('trans_amount')->type('text')->group('w-1/2');
+        $fields->name('business_short_code')->type('text')->group('w-1/2');
+        $fields->name('bill_ref_number')->type('text')->group('w-1/2');
+        $fields->name('invoice_number')->type('text')->group('w-1/2');
+        $fields->name('org_account')->type('text')->group('w-1/2');
+        $fields->name('third_party_id')->type('text')->group('w-1/2');
+        $fields->name('msisdn')->type('text')->group('w-1/2');
+        $fields->name('first_name')->type('text')->group('w-1/2');
+        $fields->name('middle_name')->type('text')->group('w-1/2');
+        $fields->name('last_name')->type('text')->group('w-1/2');
+        $fields->name('completed')->type('switch')->group('w-1/2');
+        $fields->name('successful')->type('switch')->group('w-1/2');
+        $fields->name('published')->type('switch')->group('w-1/2');
+
+        // $fields->name(
+
+        return $fields;
+
+    }
+
+    public function filter()
+    {
+        // listing view fields
+        $fields = new FormBuilder();
+
+        $fields->name('trans_type')->type('text')->group('w-1/6');
+        $fields->name('trans_id')->type('text')->group('w-1/6');
+        $fields->name('msisdn')->type('text')->group('w-1/6');
+        $fields->name('first_name')->type('text')->group('w-1/6');
+        $fields->name('middle_name')->type('text')->group('w-1/6');
+        $fields->name('last_name')->type('text')->group('w-1/6');
+        $fields->name('completed')->type('switch')->group('w-1/6');
+        $fields->name('successful')->type('switch')->group('w-1/6');
+        $fields->name('published')->type('switch')->group('w-1/6');
+
+        return $fields;
+
+    }
 
     /**
      * List of fields for managing postings.

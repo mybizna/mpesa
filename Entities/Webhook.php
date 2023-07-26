@@ -4,6 +4,8 @@ namespace Modules\Mpesa\Entities;
 
 use Illuminate\Database\Schema\Blueprint;
 use Modules\Base\Entities\BaseModel;
+use Modules\Core\Classes\Views\FormBuilder;
+use Modules\Core\Classes\Views\ListTable;
 
 class Webhook extends BaseModel
 {
@@ -21,6 +23,53 @@ class Webhook extends BaseModel
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+    public function listTable()
+    {
+        // listing view fields
+        $fields = new ListTable();
+
+        $fields->name('slug')->type('text')->ordering(true);
+        $fields->name('validation_url')->type('text')->ordering(true);
+        $fields->name('confirmation_url')->type('text')->ordering(true);
+        $fields->name('paybill_till')->type('text')->ordering(true);
+        $fields->name('shortcode')->type('text')->ordering(true);
+        $fields->name('published')->type('switch')->ordering(true);
+
+        return $fields;
+
+    }
+
+    public function formBuilder()
+    {
+        // listing view fields
+        $fields = new FormBuilder();
+
+        $fields->name('slug')->type('text')->group('w-1/2');
+        $fields->name('validation_url')->type('text')->group('w-1/2');
+        $fields->name('confirmation_url')->type('text')->group('w-1/2');
+        $fields->name('paybill_till')->type('text')->group('w-1/2');
+        $fields->name('shortcode')->type('text')->group('w-1/2');
+        $fields->name('published')->type('switch')->group('w-1/2');
+
+        return $fields;
+
+    }
+
+    public function filter()
+    {
+        // listing view fields
+        $fields = new FormBuilder();
+
+        $fields->name('slug')->type('text')->group('w-1/6');
+        $fields->name('validation_url')->type('text')->group('w-1/6');
+        $fields->name('confirmation_url')->type('text')->group('w-1/6');
+        $fields->name('paybill_till')->type('text')->group('w-1/6');
+        $fields->name('shortcode')->type('text')->group('w-1/6');
+        $fields->name('published')->type('switch')->group('w-1/6');
+
+        return $fields;
+
+    }
     /**
      * List of fields for managing postings.
      *
