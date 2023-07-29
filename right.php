@@ -1,4 +1,7 @@
 <?php
+
+/** @var \Modules\Base\Classes\Fetch\Rights $this */
+
 $this->add_right("mpesa", "gateway", "administrator", view:true, add:true, edit:true, delete:true);
 $this->add_right("mpesa", "gateway", "manager", view:true, add:true, edit:true, delete:true);
 $this->add_right("mpesa", "gateway", "supervisor", view:true, add:true, edit:true, delete:true);

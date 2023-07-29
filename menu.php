@@ -1,5 +1,7 @@
 <?php
 
+/** @var \Modules\Base\Classes\Fetch\Menus $this */
+
 $this->add_module_info("mpesa", [
     'title' => 'Mpesa',
     'description' => 'Mpesa',

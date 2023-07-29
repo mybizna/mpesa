@@ -3,17 +3,28 @@
 namespace Modules\Mpesa\Entities;
 
 use Illuminate\Database\Schema\Blueprint;
+use Modules\Base\Classes\Views\FormBuilder;
+use Modules\Base\Classes\Views\ListTable;
 use Modules\Base\Entities\BaseModel;
-use Modules\Core\Classes\Views\FormBuilder;
-use Modules\Core\Classes\Views\ListTable;
 
 class Stkpush extends BaseModel
 {
-
+    /**
+     * The table associated with the model.
+     * @var string
+     */
     protected $table = "mpesa_stkpush";
 
-    public $migrationDependancy = [];
+    /**
+     * List of tables names that are need in this model.
+     * @var array<string>
+     */
+    public array $migrationDependancy = [];
 
+    /**
+     * The fields that can be filled
+     * @var array<string>
+     */
     protected $fillable = ['amount', 'phone', 'reference', 'description', 'command', 'gateway_id', 'completed', 'successful', 'merchant_request_id', 'checkout_request_id'];
 
     /**
@@ -23,7 +34,7 @@ class Stkpush extends BaseModel
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
-    public function listTable()
+    public function listTable(): ListTable
     {
         // listing view fields
         $fields = new ListTable();
@@ -62,7 +73,7 @@ class Stkpush extends BaseModel
 
     }
 
-    public function filter()
+    public function filter(): FormBuilder
     {
         // listing view fields
         $fields = new FormBuilder();
@@ -76,7 +87,7 @@ class Stkpush extends BaseModel
 
     }
     /**
-     * List of fields for managing postings.
+     * List of fields to be migrated to the datebase when creating or updating model during migration.
      *
      * @param Blueprint $table
      * @return void

@@ -7,13 +7,23 @@ use Modules\Base\Classes\Datasetter;
 
 class Gateway
 {
-
+    /**
+     * Set ordering of the Class to be migrated.
+     * @var int
+     */
     public $ordering = 7;
 
-    public function data(Datasetter $datasetter)
+    /**
+     * Run the database seeds with system default records.
+     *
+     * @param Datasetter $datasetter
+     *
+     * @return void
+     */
+    public function data(Datasetter $datasetter): void
     {
         $ledger_id = DB::table('account_ledger')->where('slug', 'mpesa')->value('id');
-        
+
         $datasetter->add_data('account', 'gateway', 'slug', [
             "title" => "MPesa",
             "slug" => "mpesa",
@@ -24,9 +34,9 @@ class Gateway
             "is_default" => false,
             "is_hidden" => false,
             "is_hide_in_invoice" => false,
-            "published" => true
+            "published" => true,
         ]);
-        
+
         $datasetter->add_data('mpesa', 'gateway', 'slug', [
             "title" => "Sandbox MPesa Express",
             "description" => "Sandbox MPesa Express ",
@@ -45,7 +55,7 @@ class Gateway
             "ledger_id" => $ledger_id,
             "sandbox" => true,
             "default" => true,
-            "published" => true
+            "published" => true,
         ]);
 
         $datasetter->add_data('mpesa', 'gateway', 'slug', [
@@ -66,7 +76,7 @@ class Gateway
             "ledger_id" => $ledger_id,
             "sandbox" => true,
             "default" => false,
-            "published" => true
+            "published" => true,
         ]);
 
     }

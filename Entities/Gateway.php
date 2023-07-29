@@ -3,17 +3,28 @@
 namespace Modules\Mpesa\Entities;
 
 use Illuminate\Database\Schema\Blueprint;
+use Modules\Base\Classes\Views\FormBuilder;
+use Modules\Base\Classes\Views\ListTable;
 use Modules\Base\Entities\BaseModel;
-use Modules\Core\Classes\Views\FormBuilder;
-use Modules\Core\Classes\Views\ListTable;
 
 class Gateway extends BaseModel
 {
-
+    /**
+     * The table associated with the model.
+     * @var string
+     */
     protected $table = "mpesa_gateway";
 
-    public $migrationDependancy = [];
+    /**
+     * List of tables names that are need in this model.
+     * @var array<string>
+     */
+    public array $migrationDependancy = [];
 
+    /**
+     * The fields that can be filled
+     * @var array<string>
+     */
     protected $fillable = ['title', 'slug', 'ledger_id', 'currency_id', 'consumer_key',
         'consumer_secret', 'initiator_name', 'initiator_password', 'party_a', 'party_b', 'type',
         'passkey', 'business_shortcode', 'phone_number', 'method',
@@ -26,7 +37,7 @@ class Gateway extends BaseModel
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
-    public function listTable()
+    public function listTable(): ListTable
     {
         // listing view fields
         $fields = new ListTable();
@@ -74,7 +85,7 @@ class Gateway extends BaseModel
 
     }
 
-    public function filter()
+    public function filter(): FormBuilder
     {
         // listing view fields
         $fields = new FormBuilder();
@@ -90,7 +101,7 @@ class Gateway extends BaseModel
     }
 
     /**
-     * List of fields for managing postings.
+     * List of fields to be migrated to the datebase when creating or updating model during migration.
      *
      * @param Blueprint $table
      * @return void
