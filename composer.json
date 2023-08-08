@@ -2,7 +2,7 @@
   "name": "mybizna/mpesa",
   "description": "",
   "type": "asgard-module",
-  "version": "23.08.0",
+  "version": "23.08.001",
   "license": "GPL-3.0-or-later",
   "authors": [
     {
@@ -15,7 +15,6 @@
       "email": "dedanirungu@gmail.com"
     }
   ],
-
   "require": {
     "mybizna/account": ">=1.0.0",
     "smodav/mpesa": "^v6.0.0"
