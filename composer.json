@@ -15,15 +15,10 @@
       "email": "dedanirungu@gmail.com"
     }
   ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/dedanirungu/mpesa"
-    }
-  ],
+
   "require": {
     "mybizna/account": ">=1.0.0",
-    "dedanirungu/mpesa": "^v6.0.0"
+    "smodav/mpesa": "^v6.0.0"
   },
   "extra": {
     "laravel": {
