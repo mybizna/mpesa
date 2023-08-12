@@ -30,6 +30,15 @@ class Webhook extends BaseModel
      */
     protected $fillable = ['slug', 'confirmation_url', 'validation_url', 'paybill_till', 'shortcode', 'published'];
 
+
+    /**
+     * The fields that are to be render when performing relationship queries.
+     *
+     * @var array<string>
+     */
+    public $rec_names = ['slug'];
+
+
     /**
      * The attributes that should be mutated to dates.
      *

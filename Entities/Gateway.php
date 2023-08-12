@@ -32,6 +32,13 @@ class Gateway extends BaseModel
         'consumer_secret', 'initiator_name', 'initiator_password', 'party_a', 'party_b', 'type',
         'passkey', 'business_shortcode', 'phone_number', 'method',
         'description', 'default', 'sandbox', 'published'];
+        
+    /**
+     * The fields that are to be render when performing relationship queries.
+     *
+     * @var array<string>
+     */
+    public $rec_names = ['title'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -67,7 +74,7 @@ class Gateway extends BaseModel
 
     /**
      * Function for defining list of fields in form view.
-     * 
+     *
      * @return FormBuilder
      */
     public function formBuilder(): FormBuilder
@@ -99,7 +106,7 @@ class Gateway extends BaseModel
     }
     /**
      * Function for defining list of fields in filter view.
-     * 
+     *
      * @return FormBuilder
      */
     public function filter(): FormBuilder

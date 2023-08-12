@@ -31,6 +31,15 @@ class Simulate extends BaseModel
      */
     protected $fillable = ['amount', 'phone', 'reference', 'description', 'gateway_id', 'completed', 'successful'];
 
+
+    /**
+     * The fields that are to be render when performing relationship queries.
+     *
+     * @var array<string>
+     */
+    public $rec_names = ['phone', 'reference'];
+
+
     /**
      * The attributes that should be mutated to dates.
      *
