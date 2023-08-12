@@ -60,8 +60,8 @@ class Gateway extends BaseModel
         $fields->name('title')->type('text')->ordering(true);
         $fields->name('business_shortcode')->type('text')->label('ShortCode')->ordering(true);
         $fields->name('slug')->type('text')->ordering(true);
-        $fields->name('ledger_id')->type('recordpicker')->table('account_ledger')->ordering(true);
-        $fields->name('currency_id')->type('recordpicker')->table('core_currency')->ordering(true);
+        $fields->name('ledger_id')->type('recordpicker')->table(['account', 'ledger'])->ordering(true);
+        $fields->name('currency_id')->type('recordpicker')->table(['core', 'currency'])->ordering(true);
         $fields->name('consumer_key')->type('text')->ordering(true);
         $fields->name('consumer_secret')->type('text')->ordering(true);
         $fields->name('default')->type('switch')->ordering(true);
@@ -84,8 +84,8 @@ class Gateway extends BaseModel
 
         $fields->name('title')->type('text')->group('w-1/2');
         $fields->name('slug')->type('text')->group('w-1/2');
-        $fields->name('ledger_id')->type('recordpicker')->table('account_ledger')->group('w-1/2');
-        $fields->name('currency_id')->type('recordpicker')->table('core_currency')->group('w-1/2');
+        $fields->name('ledger_id')->type('recordpicker')->table(['account', 'ledger'])->group('w-1/2');
+        $fields->name('currency_id')->type('recordpicker')->table(['core', 'currency'])->group('w-1/2');
         $fields->name('consumer_key')->type('text')->group('w-1/2');
         $fields->name('consumer_secret')->type('text')->group('w-1/2');
         $fields->name('default')->type('switch')->group('w-1/2');

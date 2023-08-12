@@ -59,7 +59,7 @@ class Simulate extends BaseModel
 
         $fields->name('amount')->type('text')->ordering(true);
         $fields->name('phone')->type('text')->ordering(true);
-        $fields->name('gateway_id')->type('recordpicker')->table('mpesa_gateway')->ordering(true);
+        $fields->name('gateway_id')->type('recordpicker')->table(['mpesa', 'gateway'])->ordering(true);
         $fields->name('completed')->type('switch')->ordering(true);
         $fields->name('successful')->type('switch')->ordering(true);
 
@@ -81,7 +81,7 @@ class Simulate extends BaseModel
         $fields->name('phone')->type('text')->group('w-1/2');
         $fields->name('reference')->type('text')->group('w-1/2');
         $fields->name('description')->type('text')->group('w-1/2');
-        $fields->name('gateway_id')->type('recordpicker')->table('mpesa_gateway')->group('w-1/2');
+        $fields->name('gateway_id')->type('recordpicker')->table(['mpesa', 'gateway'])->group('w-1/2');
         $fields->name('completed')->type('switch')->group('w-1/2');
         $fields->name('successful')->type('switch')->group('w-1/2');
 
@@ -101,7 +101,7 @@ class Simulate extends BaseModel
 
         $fields->name('amount')->type('text')->group('w-1/6');
         $fields->name('phone')->type('text')->group('w-1/6');
-        $fields->name('gateway_id')->type('recordpicker')->table('mpesa_gateway')->group('w-1/6');
+        $fields->name('gateway_id')->type('recordpicker')->table(['mpesa', 'gateway'])->group('w-1/6');
         $fields->name('completed')->type('switch')->group('w-1/6');
         $fields->name('successful')->type('switch')->group('w-1/6');
 

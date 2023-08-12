@@ -60,7 +60,7 @@ class Stkpush extends BaseModel
         $fields->name('command')->type('text')->ordering(true);
         $fields->name('merchant_request_id')->type('text')->ordering(true);
         $fields->name('checkout_request_id')->type('text')->ordering(true);
-        $fields->name('gateway_id')->type('recordpicker')->table('mpesa_gateway')->ordering(true);
+        $fields->name('gateway_id')->type('recordpicker')->table(['mpesa', 'gateway'])->ordering(true);
         $fields->name('completed')->type('switch')->ordering(true);
         $fields->name('successful')->type('switch')->ordering(true);
 
@@ -85,7 +85,7 @@ class Stkpush extends BaseModel
         $fields->name('command')->type('text')->group('w-1/2');
         $fields->name('merchant_request_id')->type('text')->group('w-1/2');
         $fields->name('checkout_request_id')->type('text')->group('w-1/2');
-        $fields->name('gateway_id')->type('recordpicker')->table('mpesa_gateway')->group('w-1/2');
+        $fields->name('gateway_id')->type('recordpicker')->table(['mpesa', 'gateway'])->group('w-1/2');
         $fields->name('completed')->type('switch')->group('w-1/2');
         $fields->name('successful')->type('switch')->group('w-1/2');
 
