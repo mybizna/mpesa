@@ -3,8 +3,6 @@
 namespace Modules\Mpesa\Entities;
 
 use Illuminate\Database\Schema\Blueprint;
-use Modules\Base\Classes\Views\FormBuilder;
-use Modules\Base\Classes\Views\ListTable;
 use Modules\Base\Entities\BaseModel;
 
 class Payment extends BaseModel
@@ -45,115 +43,29 @@ class Payment extends BaseModel
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
-     * Function for defining list of fields in table view.
-     *
-     * @return ListTable
-     */
-    public function listTable(): ListTable
-    {
-        // listing view fields
-        $fields = new ListTable();
-
-        $fields->name('trans_type')->type('text')->ordering(true);
-        $fields->name('trans_id')->type('text')->ordering(true);
-        $fields->name('first_name')->type('text')->ordering(true);
-        $fields->name('middle_name')->type('text')->ordering(true);
-        $fields->name('last_name')->type('text')->ordering(true);
-        $fields->name('trans_time')->type('text')->ordering(true);
-        $fields->name('trans_amount')->type('text')->ordering(true);
-        $fields->name('business_short_code')->type('text')->ordering(true);
-        $fields->name('bill_ref_number')->type('text')->ordering(true);
-        $fields->name('invoice_number')->type('text')->ordering(true);
-        $fields->name('org_account')->type('text')->ordering(true);
-        $fields->name('third_party_id')->type('text')->ordering(true);
-        $fields->name('msisdn')->type('text')->ordering(true);
-        $fields->name('completed')->type('switch')->ordering(true);
-        $fields->name('successful')->type('switch')->ordering(true);
-        $fields->name('published')->type('switch')->ordering(true);
-
-        return $fields;
-
-    }
-
-    /**
-     * Function for defining list of fields in form view.
-     *
-     * @return FormBuilder
-     */
-    public function formBuilder(): FormBuilder
-    {
-        // listing view fields
-        $fields = new FormBuilder();
-
-        $fields->name('trans_type')->type('text')->group('w-1/2');
-        $fields->name('trans_id')->type('text')->group('w-1/2');
-        $fields->name('trans_time')->type('text')->group('w-1/2');
-        $fields->name('trans_amount')->type('text')->group('w-1/2');
-        $fields->name('business_short_code')->type('text')->group('w-1/2');
-        $fields->name('bill_ref_number')->type('text')->group('w-1/2');
-        $fields->name('invoice_number')->type('text')->group('w-1/2');
-        $fields->name('org_account')->type('text')->group('w-1/2');
-        $fields->name('third_party_id')->type('text')->group('w-1/2');
-        $fields->name('msisdn')->type('text')->group('w-1/2');
-        $fields->name('first_name')->type('text')->group('w-1/2');
-        $fields->name('middle_name')->type('text')->group('w-1/2');
-        $fields->name('last_name')->type('text')->group('w-1/2');
-        $fields->name('completed')->type('switch')->group('w-1/2');
-        $fields->name('successful')->type('switch')->group('w-1/2');
-        $fields->name('published')->type('switch')->group('w-1/2');
-
-        return $fields;
-
-    }
-
-    /**
-     * Function for defining list of fields in filter view.
-     *
-     * @return FormBuilder
-     */
-    public function filter(): FormBuilder
-    {
-        // listing view fields
-        $fields = new FormBuilder();
-
-        $fields->name('trans_type')->type('text')->group('w-1/6');
-        $fields->name('trans_id')->type('text')->group('w-1/6');
-        $fields->name('msisdn')->type('text')->group('w-1/6');
-        $fields->name('first_name')->type('text')->group('w-1/6');
-        $fields->name('middle_name')->type('text')->group('w-1/6');
-        $fields->name('last_name')->type('text')->group('w-1/6');
-        $fields->name('completed')->type('switch')->group('w-1/6');
-        $fields->name('successful')->type('switch')->group('w-1/6');
-        $fields->name('published')->type('switch')->group('w-1/6');
-
-        return $fields;
-
-    }
-
-    /**
      * List of fields to be migrated to the datebase when creating or updating model during migration.
      *
      * @param Blueprint $table
      * @return void
      */
-    public function migration(Blueprint $table): void
+    public function fields(Blueprint $table): void
     {
-        $table->increments('id');
-        $table->string('trans_type')->nullable();
-        $table->string('trans_id')->nullable();
-        $table->string('trans_time')->nullable();
-        $table->string('trans_amount')->nullable();
-        $table->string('business_short_code')->nullable();
-        $table->string('bill_ref_number')->nullable();
-        $table->string('invoice_number')->nullable();
-        $table->string('org_account')->nullable();
-        $table->string('third_party_id')->nullable();
-        $table->string('msisdn')->nullable();
-        $table->string('first_name')->nullable();
-        $table->string('middle_name')->nullable();
-        $table->string('last_name')->nullable();
-        $table->tinyInteger('published')->nullable()->default(0);
-        $table->tinyInteger('completed')->nullable()->default(0);
-        $table->tinyInteger('successful')->nullable()->default(0);
+        $this->fields->increments('id')->html('text');
+        $this->fields->string('trans_type')->nullable()->html('text');
+        $this->fields->string('trans_id')->nullable()->html('text');
+        $this->fields->string('trans_time')->nullable()->html('text');
+        $this->fields->string('trans_amount')->nullable()->html('text');
+        $this->fields->string('business_short_code')->nullable()->html('text');
+        $this->fields->string('bill_ref_number')->nullable()->html('text');
+        $this->fields->string('invoice_number')->nullable()->html('text');
+        $this->fields->string('org_account')->nullable()->html('text');
+        $this->fields->string('third_party_id')->nullable()->html('text');
+        $this->fields->string('msisdn')->nullable()->html('text');
+        $this->fields->string('first_name')->nullable()->html('text');
+        $this->fields->string('middle_name')->nullable()->html('text');
+        $this->fields->string('last_name')->nullable()->html('text');
+        $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
+        $this->fields->tinyInteger('completed')->nullable()->default(0)->html('switch');
+        $this->fields->tinyInteger('successful')->nullable()->default(0)->html('switch');
     }
 }

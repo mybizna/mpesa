@@ -3,8 +3,6 @@
 namespace Modules\Mpesa\Entities;
 
 use Illuminate\Database\Schema\Blueprint;
-use Modules\Base\Classes\Views\FormBuilder;
-use Modules\Base\Classes\Views\ListTable;
 use Modules\Base\Entities\BaseModel;
 
 class Gateway extends BaseModel
@@ -32,7 +30,7 @@ class Gateway extends BaseModel
         'consumer_secret', 'initiator_name', 'initiator_password', 'party_a', 'party_b', 'type',
         'passkey', 'business_shortcode', 'phone_number', 'method',
         'description', 'default', 'sandbox', 'published'];
-        
+
     /**
      * The fields that are to be render when performing relationship queries.
      *
@@ -48,111 +46,35 @@ class Gateway extends BaseModel
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
-     * Function for defining list of fields in table view.
-     *
-     * @return ListTable
-     */
-    public function listTable(): ListTable
-    {
-        // listing view fields
-        $fields = new ListTable();
-
-        $fields->name('title')->type('text')->ordering(true);
-        $fields->name('business_shortcode')->type('text')->label('ShortCode')->ordering(true);
-        $fields->name('slug')->type('text')->ordering(true);
-        $fields->name('ledger_id')->type('recordpicker')->table(['account', 'ledger'])->ordering(true);
-        $fields->name('currency_id')->type('recordpicker')->table(['core', 'currency'])->ordering(true);
-        $fields->name('consumer_key')->type('text')->ordering(true);
-        $fields->name('consumer_secret')->type('text')->ordering(true);
-        $fields->name('default')->type('switch')->ordering(true);
-        $fields->name('sandbox')->type('switch')->ordering(true);
-        $fields->name('published')->type('switch')->ordering(true);
-
-        return $fields;
-
-    }
-
-    /**
-     * Function for defining list of fields in form view.
-     *
-     * @return FormBuilder
-     */
-    public function formBuilder(): FormBuilder
-    {
-        // listing view fields
-        $fields = new FormBuilder();
-
-        $fields->name('title')->type('text')->group('w-1/2');
-        $fields->name('slug')->type('text')->group('w-1/2');
-        $fields->name('ledger_id')->type('recordpicker')->table(['account', 'ledger'])->group('w-1/2');
-        $fields->name('currency_id')->type('recordpicker')->table(['core', 'currency'])->group('w-1/2');
-        $fields->name('consumer_key')->type('text')->group('w-1/2');
-        $fields->name('consumer_secret')->type('text')->group('w-1/2');
-        $fields->name('default')->type('switch')->group('w-1/2');
-        $fields->name('sandbox')->type('switch')->group('w-1/2');
-        $fields->name('initiator_name')->type('text')->group('w-1/2');
-        $fields->name('initiator_password')->type('text')->group('w-1/2');
-        $fields->name('party_a')->type('text')->group('w-1/2');
-        $fields->name('party_b')->type('text')->group('w-1/2');
-        $fields->name('type')->type('select')->options(['paybill' => 'Paybill', 'tillno' => 'Till No'])->group('w-1/2');
-        $fields->name('passkey')->type('text')->group('w-1/2');
-        $fields->name('business_shortcode')->type('text')->label('ShortCode')->group('w-1/2');
-        $fields->name('phone_number')->type('text')->group('w-1/2');
-        $fields->name('method')->type('select')->options(['sending' => 'Sending', 'stkpush' => 'STK Push'])->group('w-1/2');
-        $fields->name('description')->type('textarea')->group('w-full');
-
-        return $fields;
-
-    }
-    /**
-     * Function for defining list of fields in filter view.
-     *
-     * @return FormBuilder
-     */
-    public function filter(): FormBuilder
-    {
-        // listing view fields
-        $fields = new FormBuilder();
-
-        $fields->name('title')->type('switch')->group('w-1/6');
-        $fields->name('ledger_id')->type('recordpicker')->group('w-1/6');
-        $fields->name('currency_id')->type('recordpicker')->group('w-1/6');
-        $fields->name('default')->type('switch')->group('w-1/6');
-        $fields->name('sandbox')->type('switch')->group('w-1/6');
-
-        return $fields;
-
-    }
-
-    /**
      * List of fields to be migrated to the datebase when creating or updating model during migration.
      *
      * @param Blueprint $table
      * @return void
      */
-    public function migration(Blueprint $table): void
+    public function fields(Blueprint $table): void
     {
-        $table->increments('id');
-        $table->string('title');
-        $table->string('slug');
-        $table->string('consumer_key');
-        $table->string('consumer_secret');
-        $table->string('initiator_name');
-        $table->string('initiator_password');
-        $table->string('passkey');
-        $table->string('party_a');
-        $table->string('party_b');
-        $table->string('business_shortcode');
-        $table->string('phone_number')->nullable();
-        $table->enum('type', ['paybill', 'tillno'])->default('paybill')->nullable();
-        $table->enum('method', ['sending', 'stkpush'])->default('sending')->nullable();
-        $table->integer('ledger_id')->nullable();
-        $table->integer('currency_id')->nullable();
-        $table->string('description')->nullable();
-        $table->tinyInteger('default')->nullable()->default(0);
-        $table->tinyInteger('sandbox')->nullable()->default(0);
-        $table->tinyInteger('published')->nullable()->default(0);
+        $this->fields->increments('id')->html('text');
+        $this->fields->string('title')->html('text');
+        $this->fields->string('slug')->html('text');
+        $this->fields->string('consumer_key')->html('text');
+        $this->fields->string('consumer_secret')->html('text');
+        $this->fields->string('initiator_name')->html('text');
+        $this->fields->string('initiator_password')->html('text');
+        $this->fields->string('passkey')->html('text');
+        $this->fields->string('party_a')->html('text');
+        $this->fields->string('party_b')->html('text');
+        $this->fields->string('business_shortcode')->html('text');
+        $this->fields->string('phone_number')->nullable()->html('text');
+        $this->fields->enum('type', ['paybill', 'tillno'])->default('paybill')->nullable()->html('select');
+        $this->fields->enum('method', ['sending', 'stkpush'])->default('sending')->nullable()->html('select');
+        $this->fields->integer('ledger_id')->nullable()->html('recordpicker')->table(['account', 'ledger']);
+        $this->fields->integer('currency_id')->nullable()->html('recordpicker')->table(['core', 'currency']);
+        $this->fields->string('description')->nullable()->html('textarea');
+        $this->fields->tinyInteger('default')->nullable()->default(0)->html('switch');
+        $this->fields->tinyInteger('sandbox')->nullable()->default(0)->html('switch');
+        $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
     }
+
 }
 
 /**
