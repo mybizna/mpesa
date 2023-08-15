@@ -60,7 +60,7 @@ class Stkpush extends BaseModel
         $this->fields->string('command')->nullable()->html('text');
         $this->fields->string('merchant_request_id')->nullable()->html('text');
         $this->fields->string('checkout_request_id')->nullable()->html('text');
-        $this->fields->integer('gateway_id')->nullable()->html('recordpicker')->table(['mpesa', 'gateway']);
+        $this->fields->integer('gateway_id')->nullable()->html('recordpicker')->relation(['mpesa', 'gateway']);
         $this->fields->tinyInteger('completed')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('successful')->nullable()->default(0)->html('switch');
     }

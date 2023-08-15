@@ -55,6 +55,9 @@ class Gateway extends BaseModel
     {
         $this->fields = $table ?? new Blueprint($this->table);
 
+        $type = ['paybill', 'tillno'];
+        $method =  ['sending', 'stkpush'];
+
         $this->fields->increments('id')->html('text');
         $this->fields->string('title')->html('text');
         $this->fields->string('slug')->html('text');
@@ -67,10 +70,10 @@ class Gateway extends BaseModel
         $this->fields->string('party_b')->html('text');
         $this->fields->string('business_shortcode')->html('text');
         $this->fields->string('phone_number')->nullable()->html('text');
-        $this->fields->enum('type', ['paybill', 'tillno'])->default('paybill')->nullable()->html('select');
-        $this->fields->enum('method', ['sending', 'stkpush'])->default('sending')->nullable()->html('select');
-        $this->fields->integer('ledger_id')->nullable()->html('recordpicker')->table(['account', 'ledger']);
-        $this->fields->integer('currency_id')->nullable()->html('recordpicker')->table(['core', 'currency']);
+        $this->fields->enum('type', $type)->options($type)->default('paybill')->nullable()->html('select');
+        $this->fields->enum('method',$method)->options($method)->default('sending')->nullable()->html('select');
+        $this->fields->integer('ledger_id')->nullable()->html('recordpicker')->relation(['account', 'ledger']);
+        $this->fields->integer('currency_id')->nullable()->html('recordpicker')->relation(['core', 'currency']);
         $this->fields->string('description')->nullable()->html('textarea');
         $this->fields->tinyInteger('default')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('sandbox')->nullable()->default(0)->html('switch');

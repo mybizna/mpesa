@@ -58,7 +58,7 @@ class Simulate extends BaseModel
         $this->fields->string('phone')->html('text');
         $this->fields->string('reference')->nullable()->html('text');
         $this->fields->string('description')->nullable()->html('textarea');
-        $this->fields->integer('gateway_id')->nullable()->html('recordpicker')->table(['mpesa', 'gateway']);
+        $this->fields->integer('gateway_id')->nullable()->html('recordpicker')->relation(['mpesa', 'gateway']);
         $this->fields->tinyInteger('completed')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('successful')->nullable()->default(0)->html('switch');
     }
