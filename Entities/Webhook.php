@@ -48,10 +48,10 @@ class Webhook extends BaseModel
      * @param Blueprint $table
      * @return void
      */
-    public function fields(Blueprint $table): void
+    public function fields(Blueprint $table = null): void
     {
         $this->fields = $table ?? new Blueprint($this->table);
-        
+
         $this->fields->increments('id')->html('text');
         $this->fields->string('slug')->html('text');
         $this->fields->string('validation_url')->html('text');
@@ -59,5 +59,18 @@ class Webhook extends BaseModel
         $this->fields->string('paybill_till')->html('text');
         $this->fields->string('shortcode')->html('text');
         $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
+    }
+
+    /**
+     * List of structure for this model.
+     */
+    public function structure($structure): array
+    {
+        $structure = [
+            'table' => ['slug', 'confirmation_url', 'validation_url', 'paybill_till', 'shortcode', 'published'],
+            'filter' => ['slug', 'confirmation_url', 'validation_url', 'paybill_till', 'published'],
+        ];
+
+        return $structure;
     }
 }

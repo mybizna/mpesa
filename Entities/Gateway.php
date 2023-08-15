@@ -51,10 +51,10 @@ class Gateway extends BaseModel
      * @param Blueprint $table
      * @return void
      */
-    public function fields(Blueprint $table): void
+    public function fields(Blueprint $table = null): void
     {
         $this->fields = $table ?? new Blueprint($this->table);
-        
+
         $this->fields->increments('id')->html('text');
         $this->fields->string('title')->html('text');
         $this->fields->string('slug')->html('text');
@@ -75,6 +75,19 @@ class Gateway extends BaseModel
         $this->fields->tinyInteger('default')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('sandbox')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
+    }
+
+    /**
+     * List of structure for this model.
+     */
+    public function structure($structure): array
+    {
+        $structure = [
+            'table' => ['title', 'ledger_id', 'currency_id', 'consumer_key', 'consumer_secret', 'initiator_name', 'passkey', 'business_shortcode', 'phone_number', 'method', 'published'],
+            'filter' => ['ledger_id', 'currency_id'],
+        ];
+
+        return $structure;
     }
 
 }

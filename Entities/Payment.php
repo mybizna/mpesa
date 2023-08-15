@@ -48,10 +48,10 @@ class Payment extends BaseModel
      * @param Blueprint $table
      * @return void
      */
-    public function fields(Blueprint $table): void
+    public function fields(Blueprint $table = null): void
     {
         $this->fields = $table ?? new Blueprint($this->table);
-        
+
         $this->fields->increments('id')->html('text');
         $this->fields->string('trans_type')->nullable()->html('text');
         $this->fields->string('trans_id')->nullable()->html('text');
@@ -69,5 +69,18 @@ class Payment extends BaseModel
         $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('completed')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('successful')->nullable()->default(0)->html('switch');
+    }
+
+    /**
+     * List of structure for this model.
+     */
+    public function structure($structure): array
+    {
+        $structure = [
+            'table' => ['first_name', 'middle_name', 'last_name', 'msisdn', 'trans_type', 'trans_id', 'trans_time', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'completed', 'successful', 'published'],
+            'filter' => ['msisdn', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'completed', 'successful', 'published'],
+        ];
+
+        return $structure;
     }
 }

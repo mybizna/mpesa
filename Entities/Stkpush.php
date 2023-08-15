@@ -48,10 +48,10 @@ class Stkpush extends BaseModel
      * @param Blueprint $table
      * @return void
      */
-    public function fields(Blueprint $table): void
+    public function fields(Blueprint $table = null): void
     {
         $this->fields = $table ?? new Blueprint($this->table);
-        
+
         $this->fields->increments('id')->html('text');
         $this->fields->string('amount')->html('text');
         $this->fields->string('phone')->html('text');
@@ -63,5 +63,18 @@ class Stkpush extends BaseModel
         $this->fields->integer('gateway_id')->nullable()->html('recordpicker')->table(['mpesa', 'gateway']);
         $this->fields->tinyInteger('completed')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('successful')->nullable()->default(0)->html('switch');
+    }
+
+    /**
+     * List of structure for this model.
+     */
+    public function structure($structure): array
+    {
+        $structure = [
+            'table' => ['amount', 'phone', 'reference', 'description', 'command', 'gateway_id', 'completed', 'successful', 'merchant_request_id', 'checkout_request_id'],
+            'filter' => ['amount', 'phone', 'reference', 'command', 'gateway_id', 'completed', 'successful'],
+        ];
+
+        return $structure;
     }
 }

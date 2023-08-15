@@ -49,7 +49,7 @@ class Simulate extends BaseModel
      * @param Blueprint $table
      * @return void
      */
-    public function fields(Blueprint $table): void
+    public function fields(Blueprint $table = null): void
     {
         $this->fields = $table ?? new Blueprint($this->table);
         
@@ -61,6 +61,19 @@ class Simulate extends BaseModel
         $this->fields->integer('gateway_id')->nullable()->html('recordpicker')->table(['mpesa', 'gateway']);
         $this->fields->tinyInteger('completed')->nullable()->default(0)->html('switch');
         $this->fields->tinyInteger('successful')->nullable()->default(0)->html('switch');
+    }
+
+    /**
+     * List of structure for this model.
+     */
+    public function structure($structure): array
+    {
+        $structure = [
+            'table' => ['amount', 'phone', 'reference', 'gateway_id', 'completed', 'successful'],
+            'filter' => ['amount', 'phone', 'reference', 'gateway_id', 'completed', 'successful'],
+        ];
+
+        return $structure;
     }
 
 }
