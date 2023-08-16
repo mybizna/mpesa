@@ -56,7 +56,7 @@ class Gateway extends BaseModel
         $this->fields = $table ?? new Blueprint($this->table);
 
         $type = ['paybill', 'tillno'];
-        $method =  ['sending', 'stkpush'];
+        $method = ['sending', 'stkpush'];
 
         $this->fields->increments('id')->html('text');
         $this->fields->string('title')->html('text');
@@ -71,7 +71,7 @@ class Gateway extends BaseModel
         $this->fields->string('business_shortcode')->html('text');
         $this->fields->string('phone_number')->nullable()->html('text');
         $this->fields->enum('type', $type)->options($type)->default('paybill')->nullable()->html('select');
-        $this->fields->enum('method',$method)->options($method)->default('sending')->nullable()->html('select');
+        $this->fields->enum('method', $method)->options($method)->default('sending')->nullable()->html('select');
         $this->fields->integer('ledger_id')->nullable()->html('recordpicker')->relation(['account', 'ledger']);
         $this->fields->integer('currency_id')->nullable()->html('recordpicker')->relation(['core', 'currency']);
         $this->fields->string('description')->nullable()->html('textarea');
@@ -87,6 +87,13 @@ class Gateway extends BaseModel
     {
         $structure = [
             'table' => ['title', 'ledger_id', 'currency_id', 'consumer_key', 'consumer_secret', 'initiator_name', 'passkey', 'business_shortcode', 'phone_number', 'method', 'published'],
+            'form' => [
+                ['label' => 'Title', 'class' => 'w-full', 'fields' => ['title', 'slug']],
+                ['label' => 'Main', 'class' => 'w-1/2', 'fields' => ['ledger_id', 'currency_id', 'consumer_key', 'consumer_secret', 'initiator_name', 'initiator_password']],
+                ['label' => 'Other', 'class' => 'w-1/2', 'fields' => ['party_a', 'party_b', 'type', 'passkey', 'business_shortcode', 'phone_number', 'method']],
+                ['label' => 'Title', 'class' => 'w-full', 'fields' => ['default', 'sandbox', 'published']],
+                ['label' => 'Title', 'class' => 'w-full', 'fields' => ['description']],
+            ],
             'filter' => ['ledger_id', 'currency_id'],
         ];
 

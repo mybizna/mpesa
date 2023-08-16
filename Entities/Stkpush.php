@@ -70,8 +70,15 @@ class Stkpush extends BaseModel
      */
     public function structure($structure): array
     {
+
         $structure = [
-            'table' => ['amount', 'phone', 'reference', 'description', 'command', 'gateway_id', 'completed', 'successful', 'merchant_request_id', 'checkout_request_id'],
+            'table' => ['amount', 'phone', 'reference', 'command', 'gateway_id', 'completed', 'successful', 'merchant_request_id', 'checkout_request_id'],
+            'form' => [
+                ['label' => 'Phone', 'class' => 'w-full', 'fields' => ['phone']],
+                ['label' => 'Stkpush', 'class' => 'w-1/2', 'fields' => ['amount', 'reference', 'merchant_request_id', 'checkout_request_id']],
+                ['label' => 'Setting', 'class' => 'w-1/2', 'fields' => ['gateway_id', 'completed', 'successful']],
+                ['label' => 'Description', 'class' => 'w-full', 'fields' => ['description']],
+            ],
             'filter' => ['amount', 'phone', 'reference', 'command', 'gateway_id', 'completed', 'successful'],
         ];
 

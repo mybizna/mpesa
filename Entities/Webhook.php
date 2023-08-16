@@ -68,6 +68,11 @@ class Webhook extends BaseModel
     {
         $structure = [
             'table' => ['slug', 'confirmation_url', 'validation_url', 'paybill_till', 'shortcode', 'published'],
+            'form' => [
+                ['label' => 'slug', 'class' => 'w-full', 'fields' => ['slug']],
+                ['label' => 'Webhook', 'class' => 'w-1/2', 'fields' => ['paybill_till', 'shortcode', 'published']],
+                ['label' => 'Url', 'class' => 'w-1/2', 'fields' => ['confirmation_url', 'validation_url']],
+            ],
             'filter' => ['slug', 'confirmation_url', 'validation_url', 'paybill_till', 'published'],
         ];
 
