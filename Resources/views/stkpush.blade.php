@@ -9,7 +9,7 @@
             Phone Number
         </label>
         <input
-            class="shadow appearance-none border rounded w-full py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            class="shadow appearance-none border rounded col-span-full py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="phone" value="{{ $phone }}" @if ($request_sent) readonly @endif name="phone"
             type="number" placeholder="Phone">
     </div>

@@ -68,10 +68,8 @@ class Simulate extends BaseModel
      */
     public function structure($structure): array
     {
-        $structure = [
-            'table' => ['amount', 'phone', 'reference', 'gateway_id', 'completed', 'successful'],
-            'filter' => ['amount', 'phone', 'reference', 'gateway_id', 'completed', 'successful'],
-        ];
+            $structure  ['table'] = ['amount', 'phone', 'reference', 'gateway_id', 'completed', 'successful'];
+            $structure  ['filter'] = ['amount', 'phone', 'reference', 'gateway_id', 'completed', 'successful'];
 
         return $structure;
     }

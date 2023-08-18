@@ -76,10 +76,8 @@ class Payment extends BaseModel
      */
     public function structure($structure): array
     {
-        $structure = [
-            'table' => ['first_name', 'middle_name', 'last_name', 'msisdn', 'trans_type', 'trans_id', 'trans_time', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'completed', 'successful', 'published'],
-            'filter' => ['msisdn', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'completed', 'successful', 'published'],
-        ];
+        $structure['table'] = ['first_name', 'middle_name', 'last_name', 'msisdn', 'trans_type', 'trans_id', 'trans_time', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'completed', 'successful', 'published'];
+        $structure['filter'] = ['msisdn', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'completed', 'successful', 'published'];
 
         return $structure;
     }
