@@ -52,7 +52,7 @@ class Stkpush extends BaseModel
     {
         $this->fields = $table ?? new Blueprint($this->table);
 
-        $this->fields->increments('id')->html('text');
+        $this->fields->increments('id')->html('hidden');
         $this->fields->string('amount')->html('text');
         $this->fields->string('phone')->html('text');
         $this->fields->string('reference')->html('textarea');

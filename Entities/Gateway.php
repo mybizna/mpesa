@@ -58,7 +58,7 @@ class Gateway extends BaseModel
         $type = ['paybill', 'tillno'];
         $method = ['sending', 'stkpush'];
 
-        $this->fields->increments('id')->html('text');
+        $this->fields->increments('id')->html('hidden');
         $this->fields->string('title')->html('text');
         $this->fields->string('slug')->html('text');
         $this->fields->string('consumer_key')->html('text');
