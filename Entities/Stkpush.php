@@ -74,8 +74,8 @@ class Stkpush extends BaseModel
         $structure['table'] = ['amount', 'phone', 'reference', 'command', 'gateway_id', 'completed', 'successful', 'merchant_request_id', 'checkout_request_id'];
         $structure['form'] = [
             ['label' => 'Phone', 'class' => 'col-span-full', 'fields' => ['phone']],
-            ['label' => 'Stkpush', 'class' => 'col-span-full md:col-span-6', 'fields' => ['amount', 'reference', 'merchant_request_id', 'checkout_request_id']],
-            ['label' => 'Setting', 'class' => 'col-span-full md:col-span-6', 'fields' => ['gateway_id', 'completed', 'successful']],
+            ['label' => 'Stkpush', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => ['amount', 'reference', 'merchant_request_id', 'checkout_request_id']],
+            ['label' => 'Setting', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => ['gateway_id', 'completed', 'successful']],
             ['label' => 'Description', 'class' => 'col-span-full', 'fields' => ['description']],
         ];
         $structure['filter'] = ['amount', 'phone', 'reference', 'command', 'gateway_id', 'completed', 'successful'];

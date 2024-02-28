@@ -88,8 +88,8 @@ class Gateway extends BaseModel
         $structure['table'] = ['title', 'ledger_id', 'currency_id', 'consumer_key', 'consumer_secret', 'initiator_name', 'passkey', 'business_shortcode', 'phone_number', 'method', 'published'];
         $structure['form'] = [
             ['label' => 'Title', 'class' => 'col-span-full', 'fields' => ['title', 'slug']],
-            ['label' => 'Main', 'class' => 'col-span-full md:col-span-6', 'fields' => ['ledger_id', 'currency_id', 'consumer_key', 'consumer_secret', 'initiator_name', 'initiator_password']],
-            ['label' => 'Other', 'class' => 'col-span-full md:col-span-6', 'fields' => ['party_a', 'party_b', 'type', 'passkey', 'business_shortcode', 'phone_number', 'method']],
+            ['label' => 'Main', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => ['ledger_id', 'currency_id', 'consumer_key', 'consumer_secret', 'initiator_name', 'initiator_password']],
+            ['label' => 'Other', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => ['party_a', 'party_b', 'type', 'passkey', 'business_shortcode', 'phone_number', 'method']],
             ['label' => 'Title', 'class' => 'col-span-full', 'fields' => ['default', 'sandbox', 'published']],
             ['label' => 'Title', 'class' => 'col-span-full', 'fields' => ['description']],
         ];
