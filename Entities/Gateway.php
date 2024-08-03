@@ -15,13 +15,6 @@ class Gateway extends BaseModel
     protected $table = "mpesa_gateway";
 
     /**
-     * List of tables names that are need in this model.
-     *
-     * @var array<string>
-     */
-    public array $migrationDependancy = [];
-
-    /**
      * The fields that can be filled
      *
      * @var array<string>
@@ -30,13 +23,6 @@ class Gateway extends BaseModel
         'consumer_secret', 'initiator_name', 'initiator_password', 'party_a', 'party_b', 'type',
         'passkey', 'business_shortcode', 'phone_number', 'method',
         'description', 'default', 'sandbox', 'published'];
-
-    /**
-     * The fields that are to be render when performing relationship queries.
-     *
-     * @var array<string>
-     */
-    public $rec_names = ['title'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -80,39 +66,9 @@ class Gateway extends BaseModel
         $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
     }
 
-    /**
-     * List of structure for this model.
-     */
-    public function structure($structure): array
-    {
-        $structure['table'] = ['title', 'ledger_id', 'currency_id', 'consumer_key', 'consumer_secret', 'initiator_name', 'passkey', 'business_shortcode', 'phone_number', 'method', 'published'];
-        $structure['form'] = [
-            ['label' => 'Gateway Title', 'class' => 'col-span-full', 'fields' => ['title', 'slug']],
-            ['label' => 'Gateway Main', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => ['ledger_id', 'currency_id', 'consumer_key', 'consumer_secret', 'initiator_name', 'initiator_password']],
-            ['label' => 'Gateway Other', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => ['party_a', 'party_b', 'type', 'passkey', 'business_shortcode', 'phone_number', 'method']],
-            ['label' => 'Gateway Setting', 'class' => 'col-span-full', 'fields' => ['default', 'sandbox', 'published']],
-            ['label' => 'Gateway Description', 'class' => 'col-span-full', 'fields' => ['description']],
-        ];
-        $structure['filter'] = ['ledger_id', 'currency_id'];
 
-        return $structure;
-    }
 
-    /**
-     * Define rights for this model.
-     *
-     * @return array
-     */
-    public function rights(): array
-    {
-        $rights = parent::rights();
-
-        $rights['staff'] = ['view' => true];
-        $rights['registered'] = [];
-        $rights['guest'] = [];
-
-        return $rights;
-    }
+ 
 
 }
 

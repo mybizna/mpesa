@@ -15,25 +15,11 @@ class Payment extends BaseModel
     protected $table = "mpesa_payment";
 
     /**
-     * List of tables names that are need in this model.
-     *
-     * @var array<string>
-     */
-    public array $migrationDependancy = [];
-
-    /**
      * The fields that can be filled
      *
      * @var array<string>
      */
     protected $fillable = ['trans_type', 'trans_id', 'trans_time', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'org_account', 'third_party_id', 'msisdn', 'first_name', 'middle_name', 'last_name', 'completed', 'successful', 'published'];
-
-    /**
-     * The fields that are to be render when performing relationship queries.
-     *
-     * @var array<string>
-     */
-    public $rec_names = ['trans_type', 'msisdn', 'trans_amount'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -71,30 +57,6 @@ class Payment extends BaseModel
         $this->fields->tinyInteger('successful')->nullable()->default(0)->html('switch');
     }
 
-    /**
-     * List of structure for this model.
-     */
-    public function structure($structure): array
-    {
-        $structure['table'] = ['first_name', 'middle_name', 'last_name', 'msisdn', 'trans_type', 'trans_id', 'trans_time', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'completed', 'successful', 'published'];
-        $structure['filter'] = ['msisdn', 'trans_amount', 'business_short_code', 'bill_ref_number', 'invoice_number', 'completed', 'successful', 'published'];
 
-        return $structure;
-    }
 
-    /**
-     * Define rights for this model.
-     *
-     * @return array
-     */
-    public function rights(): array
-    {
-        $rights = parent::rights();
-
-        $rights['staff'] = ['view' => true];
-        $rights['registered'] = [];
-        $rights['guest'] = [];
-
-        return $rights;
-    }
 }

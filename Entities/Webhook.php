@@ -15,25 +15,11 @@ class Webhook extends BaseModel
     protected $table = "mpesa_webhook";
 
     /**
-     * List of tables names that are need in this model.
-     *
-     * @var array<string>
-     */
-    public array $migrationDependancy = [];
-
-    /**
      * The fields that can be filled
      *
      * @var array<string>
      */
     protected $fillable = ['slug', 'confirmation_url', 'validation_url', 'paybill_till', 'shortcode', 'published'];
-
-    /**
-     * The fields that are to be render when performing relationship queries.
-     *
-     * @var array<string>
-     */
-    public $rec_names = ['slug'];
 
     /**
      * The attributes that should be mutated to dates.
@@ -61,36 +47,7 @@ class Webhook extends BaseModel
         $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
     }
 
-    /**
-     * List of structure for this model.
-     */
-    public function structure($structure): array
-    {
-        $structure['table'] = ['slug', 'confirmation_url', 'validation_url', 'paybill_till', 'shortcode', 'published'];
-        $structure['form'] = [
-            ['label' => 'Wbehook Slug', 'class' => 'col-span-full', 'fields' => ['slug']],
-            ['label' => 'Webhook Detail', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => ['paybill_till', 'shortcode', 'published']],
-            ['label' => 'Webhook Url', 'class' => 'col-span-full md:col-span-6ull  md:col-span-6 md:pr-2', 'fields' => ['confirmation_url', 'validation_url']],
-        ];
-        $structure['filter'] = ['slug', 'confirmation_url', 'validation_url', 'paybill_till', 'published'];
-
-        return $structure;
-    }
 
 
-    /**
-     * Define rights for this model.
-     *
-     * @return array
-     */
-    public function rights(): array
-    {
-        $rights = parent::rights();
-
-        $rights['staff'] = ['view' => true];
-        $rights['registered'] = ['view' => true];
-        $rights['guest'] = [];
-
-        return $rights;
-    }
+  
 }
