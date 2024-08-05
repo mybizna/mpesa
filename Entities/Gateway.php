@@ -2,7 +2,6 @@
 
 namespace Modules\Mpesa\Entities;
 
-use Illuminate\Database\Schema\Blueprint;
 use Modules\Base\Entities\BaseModel;
 
 class Gateway extends BaseModel
@@ -30,45 +29,6 @@ class Gateway extends BaseModel
      * @var array <string>
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
-    /**
-     * List of fields to be migrated to the datebase when creating or updating model during migration.
-     *
-     * @param Blueprint $table
-     * @return void
-     */
-    public function fields(Blueprint $table = null): void
-    {
-        $this->fields = $table ?? new Blueprint($this->table);
-
-        $type = ['paybill', 'tillno'];
-        $method = ['sending', 'stkpush'];
-
-        $this->fields->increments('id')->html('hidden');
-        $this->fields->string('title')->html('text');
-        $this->fields->string('slug')->html('text');
-        $this->fields->string('consumer_key')->html('text');
-        $this->fields->string('consumer_secret')->html('text');
-        $this->fields->string('initiator_name')->html('text');
-        $this->fields->string('initiator_password')->html('text');
-        $this->fields->string('passkey')->html('text');
-        $this->fields->string('party_a')->html('text');
-        $this->fields->string('party_b')->html('text');
-        $this->fields->string('business_shortcode')->html('text');
-        $this->fields->string('phone_number')->nullable()->html('text');
-        $this->fields->enum('type', $type)->options($type)->default('paybill')->nullable()->html('select');
-        $this->fields->enum('method', $method)->options($method)->default('sending')->nullable()->html('select');
-        $this->fields->integer('ledger_id')->nullable()->html('recordpicker')->relation(['account', 'ledger']);
-        $this->fields->integer('currency_id')->nullable()->html('recordpicker')->relation(['core', 'currency']);
-        $this->fields->string('description')->nullable()->html('textarea');
-        $this->fields->tinyInteger('default')->nullable()->default(0)->html('switch');
-        $this->fields->tinyInteger('sandbox')->nullable()->default(0)->html('switch');
-        $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
-    }
-
-
-
- 
 
 }
 

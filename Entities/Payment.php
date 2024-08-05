@@ -2,7 +2,6 @@
 
 namespace Modules\Mpesa\Entities;
 
-use Illuminate\Database\Schema\Blueprint;
 use Modules\Base\Entities\BaseModel;
 
 class Payment extends BaseModel
@@ -27,36 +26,5 @@ class Payment extends BaseModel
      * @var array <string>
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
-    /**
-     * List of fields to be migrated to the datebase when creating or updating model during migration.
-     *
-     * @param Blueprint $table
-     * @return void
-     */
-    public function fields(Blueprint $table = null): void
-    {
-        $this->fields = $table ?? new Blueprint($this->table);
-
-        $this->fields->increments('id')->html('hidden');
-        $this->fields->string('trans_type')->nullable()->html('text');
-        $this->fields->string('trans_id')->nullable()->html('text');
-        $this->fields->string('trans_time')->nullable()->html('text');
-        $this->fields->string('trans_amount')->nullable()->html('text');
-        $this->fields->string('business_short_code')->nullable()->html('text');
-        $this->fields->string('bill_ref_number')->nullable()->html('text');
-        $this->fields->string('invoice_number')->nullable()->html('text');
-        $this->fields->string('org_account')->nullable()->html('text');
-        $this->fields->string('third_party_id')->nullable()->html('text');
-        $this->fields->string('msisdn')->nullable()->html('text');
-        $this->fields->string('first_name')->nullable()->html('text');
-        $this->fields->string('middle_name')->nullable()->html('text');
-        $this->fields->string('last_name')->nullable()->html('text');
-        $this->fields->tinyInteger('published')->nullable()->default(0)->html('switch');
-        $this->fields->tinyInteger('completed')->nullable()->default(0)->html('switch');
-        $this->fields->tinyInteger('successful')->nullable()->default(0)->html('switch');
-    }
-
-
 
 }

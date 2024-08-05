@@ -13,7 +13,27 @@ return new class extends Migration
     {
         Schema::create('mpesa_gateway', function (Blueprint $table) {
             $table->id();
-            
+
+            $table->string('title');
+            $table->string('slug');
+            $table->string('consumer_key');
+            $table->string('consumer_secret');
+            $table->string('initiator_name');
+            $table->string('initiator_password');
+            $table->string('passkey');
+            $table->string('party_a');
+            $table->string('party_b');
+            $table->string('business_shortcode');
+            $table->string('phone_number')->nullable();
+            $table->enum('type', ['paybill', 'till_number', 'shortcode'])->default('paybill')->nullable();
+            $table->enum('method', ['sending', 'receiving'])->default('sending')->nullable();
+            $table->integer('ledger_id')->nullable();
+            $table->integer('currency_id')->nullable();
+            $table->string('description')->nullable();
+            $table->tinyInteger('default')->nullable()->default(0);
+            $table->tinyInteger('sandbox')->nullable()->default(0);
+            $table->tinyInteger('published')->nullable()->default(0);
+
             $table->timestamps();
         });
     }

@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('mpesa_stkpush', function (Blueprint $table) {
             $table->id();
-            
+
+            $table->string('amount');
+            $table->string('phone');
+            $table->string('reference');
+            $table->string('description')->nullable();
+            $table->string('command')->nullable();
+            $table->string('merchant_request_id')->nullable();
+            $table->string('checkout_request_id')->nullable();
+            $table->integer('gateway_id')->nullable();
+            $table->tinyInteger('completed')->nullable()->default(0);
+            $table->tinyInteger('successful')->nullable()->default(0);
+
             $table->timestamps();
         });
     }

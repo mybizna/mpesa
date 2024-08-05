@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('mpesa_webhook', function (Blueprint $table) {
             $table->id();
-            
+
+            $table->string('slug');
+            $table->string('validation_url');
+            $table->string('confirmation_url');
+            $table->string('paybill_till');
+            $table->string('shortcode');
+            $table->tinyInteger('published')->nullable()->default(0);
+
             $table->timestamps();
         });
     }

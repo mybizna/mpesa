@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('mpesa_simulate', function (Blueprint $table) {
             $table->id();
-            
+
+            $table->string('amount');
+            $table->string('phone');
+            $table->string('reference')->nullable();
+            $table->string('description')->nullable();
+            $table->integer('gateway_id')->nullable();
+            $table->tinyInteger('completed')->nullable()->default(0);
+            $table->tinyInteger('successful')->nullable()->default(0);
+
             $table->timestamps();
         });
     }
