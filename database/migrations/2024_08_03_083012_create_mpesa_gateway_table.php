@@ -27,8 +27,8 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->enum('type', ['paybill', 'till_number', 'shortcode'])->default('paybill')->nullable();
             $table->enum('method', ['sending', 'receiving'])->default('sending')->nullable();
-            $table->integer('ledger_id')->nullable();
-            $table->integer('currency_id')->nullable();
+            $table->foreignId('ledger_id')->nullable();
+            $table->foreignId('currency_id')->nullable();
             $table->string('description')->nullable();
             $table->tinyInteger('default')->nullable()->default(0);
             $table->tinyInteger('sandbox')->nullable()->default(0);
