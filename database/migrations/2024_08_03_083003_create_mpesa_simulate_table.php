@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('phone');
             $table->string('reference')->nullable();
             $table->string('description')->nullable();
-            $table->foreignId('gateway_id')->constrained('mpesa_gateway')->onDelete('cascade')->nullable()->index('gateway_id');
+            $table->foreignId('gateway_id')->constrained('mpesa_gateway')->onDelete('cascade')->nullable()->index('mpesa_simulate_gateway_id');
             $table->tinyInteger('completed')->nullable()->default(0);
             $table->tinyInteger('successful')->nullable()->default(0);
 
