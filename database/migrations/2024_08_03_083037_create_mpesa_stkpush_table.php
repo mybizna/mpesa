@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('command')->nullable();
             $table->string('merchant_request_id')->nullable();
             $table->string('checkout_request_id')->nullable();
-            $table->foreignId('gateway_id')->nullable();
+            $table->foreignId('gateway_id')->constrained('mpesa_gateway')->onDelete('cascade')->nullable()->index('gateway_id');
             $table->tinyInteger('completed')->nullable()->default(0);
             $table->tinyInteger('successful')->nullable()->default(0);
 
