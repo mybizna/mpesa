@@ -28,7 +28,7 @@ return new class extends Migration
             $table->enum('type', ['paybill', 'till_number', 'shortcode'])->default('paybill')->nullable();
             $table->enum('method', ['sending', 'receiving'])->default('sending')->nullable();
             $table->foreignId('ledger_id')->constrained('account_ledger')->onDelete('cascade')->nullable()->index('ledger_id');
-            $table->foreignId('currency_id')->constrained('account_ledger')->onDelete('cascade')->nullable()->index('currency_id');
+            $table->foreignId('currency_id')->constrained('core_currency')->onDelete('cascade')->nullable()->index('currency_id');
             $table->string('description')->nullable();
             $table->tinyInteger('default')->nullable()->default(0);
             $table->tinyInteger('sandbox')->nullable()->default(0);
