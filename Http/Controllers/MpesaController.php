@@ -4,7 +4,7 @@ namespace Modules\Mpesa\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Modules\Account\Entities\Invoice as DBInvoice;
+use Modules\Account\Models\Invoice as DBInvoice;
 use Modules\Base\Http\Controllers\BaseController;
 use Modules\Mpesa\Classes\Mpesa;
 
@@ -82,7 +82,7 @@ class MpesaController extends BaseController
     {
         $subscription = new Subscription();
 
-       // $data = $subscription->processData($request);
+        // $data = $subscription->processData($request);
         $data = Session::get('subscription_data');
 
         $result = $subscription->tillno($data);
@@ -105,20 +105,20 @@ class MpesaController extends BaseController
 
         if (isset($data['verifying']) && $data['verifying']) {
             $validate_stkpush = $mpesa->validateStkpush($data['checkout_request_id'], $data['phone'], $invoice);
-           
+
             if ($validate_stkpush['successful']) {
                 $data['validate_stkpush'] = $validate_stkpush;
                 $data['verified'] = 1;
             } else {
                 $data['verified'] = 0;
             }
-            
+
         } else {
 
             $stkpush = $mpesa->stkpush($data['phone'], $invoice->total, $invoice->title, $data['account']);
-            
+
             $request_sent = ($stkpush) ? 1 : 0;
-          
+
             if ($stkpush) {
                 $data['stkpush'] = [
                     'checkout_request_id' => $stkpush->checkout_request_id,

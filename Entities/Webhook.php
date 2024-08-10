@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Mpesa\Entities;
+namespace Modules\Mpesa\Models;
 
-use Modules\Base\Entities\BaseModel;
+use Modules\Base\Models\BaseModel;
 
 class Webhook extends BaseModel
 {

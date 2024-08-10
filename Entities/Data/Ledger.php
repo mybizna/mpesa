@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Mpesa\Entities\Data;
+namespace Modules\Mpesa\Models\Data;
 
 use Illuminate\Support\Facades\DB;
 use Modules\Base\Classes\Datasetter;
@@ -9,7 +9,7 @@ class Ledger
 {
     /**
      * Set ordering of the Class to be migrated.
-     * 
+     *
      * @var int
      */
     public $ordering = 5;

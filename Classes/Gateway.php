@@ -2,9 +2,8 @@
 
 namespace Modules\Mpesa\Classes;
 
-use App\Models\User;
-use Modules\Mpesa\Entities\Gateway as DBGateway;
-use Modules\Partner\Entities\Partner;
+use Modules\Mpesa\Models\Gateway as DBGateway;
+use Modules\Partner\Models\Partner;
 
 class Gateway
 {
@@ -20,7 +19,6 @@ class Gateway
         if ($invoice->partner_id) {
             $data['partner'] = Partner::where(['id' => $invoice->partner_id])->first();
 
-            
             if ($data['partner']) {
                 $data['phone'] = $data['partner']->phone;
             }

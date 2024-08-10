@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Modules\Account\Classes\Ledger;
 use Modules\Account\Classes\Payment;
-use Modules\Account\Entities\Gateway as DBAccGateway;
-use Modules\Mpesa\Entities\Gateway as DBGateway;
-use Modules\Mpesa\Entities\Payment as DBPayment;
-use Modules\Mpesa\Entities\Simulate as DBSimulate;
-use Modules\Mpesa\Entities\Stkpush as DBStkpush;
-use Modules\Mpesa\Entities\Webhook as DBWebhook;
+use Modules\Account\Models\Gateway as DBAccGateway;
+use Modules\Mpesa\Models\Gateway as DBGateway;
+use Modules\Mpesa\Models\Payment as DBPayment;
+use Modules\Mpesa\Models\Simulate as DBSimulate;
+use Modules\Mpesa\Models\Stkpush as DBStkpush;
+use Modules\Mpesa\Models\Webhook as DBWebhook;
 use Modules\Partner\Classes\Partner;
 use SmoDav\Mpesa\Laravel\Facades\Registrar;
 use SmoDav\Mpesa\Laravel\Facades\Simulate;
@@ -54,7 +54,7 @@ class Mpesa
         $gateways = DBGateway::where(['published' => true])->get();
 
         foreach ($gateways as $key => $gateway) {
-            
+
             if (!$gateway->published) {
                 continue;
             }
@@ -74,7 +74,7 @@ class Mpesa
             if ($gateway->default) {
                 Config::set("mpesa.default", $gateway->slug);
             }
-            
+
             if ($gateway->method == 'sending') {
 
                 $webhook = DBWebhook::where(['confirmation_url' => $confirmation_url, 'shortcode' => $shortcode])->first();
@@ -92,7 +92,7 @@ class Mpesa
                             DBWebhook::create(['confirmation_url' => $confirmation_url, 'validation_url' => $validation_url, 'shortcode' => $shortcode, 'slug' => $gateway->slug, 'published' => true]);
                         }
 
-                    } catch (\Throwable$th) {
+                    } catch (\Throwable $th) {
                         throw $th;
                     }
                 }
@@ -135,7 +135,7 @@ class Mpesa
 
                 $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $account;
 
-                $payment_data = $payment_cls->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, code:$save_data['trans_id']);
+                $payment_data = $payment_cls->addPayment($partner_id, $title, $amount, do_reconcile_invoices: true, gateway_id: $gateway->id, ledger_id: $ledger->id, code: $save_data['trans_id']);
 
                 $payment->completed = true;
                 $payment->successful = true;
@@ -156,7 +156,6 @@ class Mpesa
             ->usingAccount($this->slug)
             ->usingReference(substr($account, 0, 12), substr($desc, 0, 12))
             ->push();
-
 
         if (!isset($response->errorCode) && $response->ResponseCode == 0) {
             $stkpush = DBStkpush::create(
@@ -205,7 +204,7 @@ class Mpesa
 
                     $title = 'Payment for : ' . $phone . ' ' . $amount . ' - ' . $title;
 
-                    $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices:true, gateway_id:$gateway->id, ledger_id:$ledger->id, invoice_id:$invoice_id, code:$checkout_request_id);
+                    $payment_data = $payment->addPayment($partner_id, $title, $amount, do_reconcile_invoices: true, gateway_id: $gateway->id, ledger_id: $ledger->id, invoice_id: $invoice_id, code: $checkout_request_id);
 
                     $stkpush->completed = true;
                     $stkpush->successful = true;
