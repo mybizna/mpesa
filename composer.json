@@ -27,7 +27,14 @@
   },
   "autoload": {
     "psr-4": {
-      "Modules\\Mpesa\\": ""
+      "Modules\\Mpesa\\": "app/",
+      "Modules\\Mpesa\\Database\\Factories\\": "database/factories/",
+      "Modules\\Mpesa\\Database\\Seeders\\": "database/seeders/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Modules\\Mpesa\\Tests\\": "tests/"
     }
   }
 }
