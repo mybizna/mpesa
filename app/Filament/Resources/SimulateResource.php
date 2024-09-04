@@ -2,9 +2,6 @@
 
 namespace Modules\Mpesa\Filament\Resources;
 
-use Modules\Mpesa\Filament\Resources\SimulateResource\Pages;
-use Modules\Mpesa\Filament\Resources\SimulateResource\RelationManagers;
-use Modules\Mpesa\Models\Simulate;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,10 +9,16 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Modules\Mpesa\Filament\Resources\SimulateResource\Pages;
+use Modules\Mpesa\Models\Simulate;
 
 class SimulateResource extends Resource
 {
     protected static ?string $model = Simulate::class;
+
+    protected static ?string $slug = 'mpesa/simulate';
+
+    protected static ?string $navigationGroup = 'Mpesa';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

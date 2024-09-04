@@ -2,9 +2,6 @@
 
 namespace Modules\Mpesa\Filament\Resources;
 
-use Modules\Mpesa\Filament\Resources\WebhookResource\Pages;
-use Modules\Mpesa\Filament\Resources\WebhookResource\RelationManagers;
-use Modules\Mpesa\Models\Webhook;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,10 +9,16 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Modules\Mpesa\Filament\Resources\WebhookResource\Pages;
+use Modules\Mpesa\Models\Webhook;
 
 class WebhookResource extends Resource
 {
     protected static ?string $model = Webhook::class;
+
+    protected static ?string $slug = 'mpesa/webhook';
+
+    protected static ?string $navigationGroup = 'Mpesa';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

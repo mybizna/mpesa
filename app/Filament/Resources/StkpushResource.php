@@ -2,9 +2,6 @@
 
 namespace Modules\Mpesa\Filament\Resources;
 
-use Modules\Mpesa\Filament\Resources\StkpushResource\Pages;
-use Modules\Mpesa\Filament\Resources\StkpushResource\RelationManagers;
-use Modules\Mpesa\Models\Stkpush;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,10 +9,16 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Modules\Mpesa\Filament\Resources\StkpushResource\Pages;
+use Modules\Mpesa\Models\Stkpush;
 
 class StkpushResource extends Resource
 {
     protected static ?string $model = Stkpush::class;
+
+    protected static ?string $slug = 'mpesa/stkpush';
+
+    protected static ?string $navigationGroup = 'Mpesa';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
