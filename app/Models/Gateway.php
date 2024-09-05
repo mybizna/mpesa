@@ -2,7 +2,9 @@
 
 namespace Modules\Mpesa\Models;
 
+use Modules\Account\Models\Ledger;
 use Modules\Base\Models\BaseModel;
+use Modules\Core\Models\Currency;
 
 class Gateway extends BaseModel
 {
@@ -29,6 +31,26 @@ class Gateway extends BaseModel
      * @var array <string>
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * Add relationship to Ledger
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ledger()
+    {
+        return $this->belongsTo(Ledger::class);
+    }
+
+    /**
+     * Add relationship to Currency
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
 
 }
 

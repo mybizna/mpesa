@@ -3,6 +3,7 @@
 namespace Modules\Mpesa\Models;
 
 use Modules\Base\Models\BaseModel;
+use Modules\Mpesa\Models\Gateway;
 
 class Simulate extends BaseModel
 {
@@ -26,5 +27,15 @@ class Simulate extends BaseModel
      * @var array <string>
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * Add relationship to Gateway
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function gateway()
+    {
+        return $this->belongsTo(Gateway::class);
+    }
 
 }
