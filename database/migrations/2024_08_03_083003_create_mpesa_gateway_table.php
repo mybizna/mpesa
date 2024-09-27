@@ -27,14 +27,19 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->enum('type', ['paybill', 'till_number', 'shortcode'])->default('paybill')->nullable();
             $table->enum('method', ['sending', 'receiving'])->default('sending')->nullable();
-            $table->foreignId('ledger_id')->constrained('account_ledger')->onDelete('cascade')->nullable()->index('mpesa_gateway_ledger_id');
-            $table->foreignId('currency_id')->constrained('core_currency')->onDelete('cascade')->nullable()->index('mpesa_gateway_currency_id');
+            $table->foreignId('ledger_id')->nullable()->constrained('account_ledger')->onDelete('set null');
+            $table->foreignId('currency_id')->nullable()->constrained('core_currency')->onDelete('set null');
             $table->string('description')->nullable();
             $table->tinyInteger('default')->nullable()->default(0);
             $table->tinyInteger('sandbox')->nullable()->default(0);
             $table->tinyInteger('published')->nullable()->default(0);
 
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('deleted_by')->nullable()->constrained('users')->onDelete('set null');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -21,11 +21,16 @@ return new class extends Migration
             $table->string('command')->nullable();
             $table->string('merchant_request_id')->nullable();
             $table->string('checkout_request_id')->nullable();
-            $table->foreignId('gateway_id')->constrained('mpesa_gateway')->onDelete('cascade')->nullable()->index('mpesa_stkpush_gateway_id');
+            $table->foreignId('gateway_id')->nullable()->constrained('mpesa_gateway')->onDelete('set null');
             $table->tinyInteger('completed')->nullable()->default(0);
             $table->tinyInteger('successful')->nullable()->default(0);
 
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('deleted_by')->nullable()->constrained('users')->onDelete('set null');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
