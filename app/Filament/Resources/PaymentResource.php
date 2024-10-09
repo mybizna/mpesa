@@ -4,15 +4,12 @@ namespace Modules\Mpesa\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Modules\Mpesa\Filament\Resources\PaymentResource\Pages;
+use Modules\Base\Filament\Resources\BaseResource;
 use Modules\Mpesa\Models\Payment;
 
-class PaymentResource extends Resource
+class PaymentResource extends BaseResource
 {
     protected static ?string $model = Payment::class;
 
@@ -140,27 +137,4 @@ class PaymentResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListPayments::route('/'),
-            'create' => Pages\CreatePayment::route('/create'),
-            'edit' => Pages\EditPayment::route('/{record}/edit'),
-        ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
 }

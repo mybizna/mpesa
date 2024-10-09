@@ -4,15 +4,12 @@ namespace Modules\Mpesa\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Modules\Mpesa\Filament\Resources\GatewayResource\Pages;
+use Modules\Base\Filament\Resources\BaseResource;
 use Modules\Mpesa\Models\Gateway;
 
-class GatewayResource extends Resource
+class GatewayResource extends BaseResource
 {
     protected static ?string $model = Gateway::class;
 
@@ -151,27 +148,4 @@ class GatewayResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListGateways::route('/'),
-            'create' => Pages\CreateGateway::route('/create'),
-            'edit' => Pages\EditGateway::route('/{record}/edit'),
-        ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
 }

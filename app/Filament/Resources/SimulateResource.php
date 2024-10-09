@@ -4,15 +4,12 @@ namespace Modules\Mpesa\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Modules\Mpesa\Filament\Resources\SimulateResource\Pages;
+use Modules\Base\Filament\Resources\BaseResource;
 use Modules\Mpesa\Models\Simulate;
 
-class SimulateResource extends Resource
+class SimulateResource extends BaseResource
 {
     protected static ?string $model = Simulate::class;
 
@@ -96,27 +93,4 @@ class SimulateResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListSimulates::route('/'),
-            'create' => Pages\CreateSimulate::route('/create'),
-            'edit' => Pages\EditSimulate::route('/{record}/edit'),
-        ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
 }

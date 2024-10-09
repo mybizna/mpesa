@@ -4,15 +4,12 @@ namespace Modules\Mpesa\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Modules\Mpesa\Filament\Resources\StkpushResource\Pages;
+use Modules\Base\Filament\Resources\BaseResource;
 use Modules\Mpesa\Models\Stkpush;
 
-class StkpushResource extends Resource
+class StkpushResource extends BaseResource
 {
     protected static ?string $model = Stkpush::class;
 
@@ -111,27 +108,4 @@ class StkpushResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListStkpushes::route('/'),
-            'create' => Pages\CreateStkpush::route('/create'),
-            'edit' => Pages\EditStkpush::route('/{record}/edit'),
-        ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
 }

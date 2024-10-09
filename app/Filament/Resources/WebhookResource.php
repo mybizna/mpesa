@@ -4,15 +4,12 @@ namespace Modules\Mpesa\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Modules\Mpesa\Filament\Resources\WebhookResource\Pages;
+use Modules\Base\Filament\Resources\BaseResource;
 use Modules\Mpesa\Models\Webhook;
 
-class WebhookResource extends Resource
+class WebhookResource extends BaseResource
 {
     protected static ?string $model = Webhook::class;
 
@@ -88,27 +85,4 @@ class WebhookResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListWebhooks::route('/'),
-            'create' => Pages\CreateWebhook::route('/create'),
-            'edit' => Pages\EditWebhook::route('/{record}/edit'),
-        ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
 }
