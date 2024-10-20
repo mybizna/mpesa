@@ -47,7 +47,7 @@ class Gateway
             "initiator_name" => "testapi",
             "initiator_password" => "Safaricom999!*!",
             "type" => "paybill",
-            "method" => "stkpush",
+            "method" => "sending",
             "party_a" => "600998",
             "party_b" => "600000",
             "phone_number" => "254708374149",
