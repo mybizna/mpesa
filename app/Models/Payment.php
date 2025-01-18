@@ -3,6 +3,7 @@
 namespace Modules\Mpesa\Models;
 
 use Modules\Base\Models\BaseModel;
+use Illuminate\Database\Schema\Blueprint;
 
 class Payment extends BaseModel
 {
@@ -30,8 +31,6 @@ class Payment extends BaseModel
 
     public function migration(Blueprint $table): void
     {
-        $table->id();
-
         $table->string('trans_type')->nullable();
         $table->string('trans_id')->nullable();
         $table->string('trans_time')->nullable();

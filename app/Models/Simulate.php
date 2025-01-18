@@ -43,7 +43,6 @@ class Simulate extends BaseModel
 
     public function migration(Blueprint $table): void
     {
-        $table->id();
 
         $table->string('amount');
         $table->string('phone');

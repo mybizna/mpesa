@@ -31,7 +31,6 @@ class Webhook extends BaseModel
 
     public function migration(Blueprint $table): void
     {
-        $table->id();
 
         $table->string('slug');
         $table->string('validation_url');
