@@ -27,4 +27,26 @@ class Payment extends BaseModel
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+
+    public function migration(Blueprint $table): void
+    {
+        $table->id();
+
+        $table->string('trans_type')->nullable();
+        $table->string('trans_id')->nullable();
+        $table->string('trans_time')->nullable();
+        $table->string('trans_amount')->nullable();
+        $table->string('business_short_code')->nullable();
+        $table->string('bill_ref_number')->nullable();
+        $table->string('invoice_number')->nullable();
+        $table->string('org_account')->nullable();
+        $table->string('third_party_id')->nullable();
+        $table->string('msisdn')->nullable();
+        $table->string('first_name')->nullable();
+        $table->string('middle_name')->nullable();
+        $table->string('last_name')->nullable();
+        $table->tinyInteger('published')->nullable()->default(0);
+        $table->tinyInteger('completed')->nullable()->default(0);
+        $table->tinyInteger('successful')->nullable()->default(0);
+    }
 }

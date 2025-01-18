@@ -3,6 +3,7 @@
 namespace Modules\Mpesa\Models;
 
 use Modules\Base\Models\BaseModel;
+use Illuminate\Database\Schema\Blueprint;
 
 class Webhook extends BaseModel
 {
@@ -27,4 +28,17 @@ class Webhook extends BaseModel
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+
+    public function migration(Blueprint $table): void
+    {
+        $table->id();
+
+        $table->string('slug');
+        $table->string('validation_url');
+        $table->string('confirmation_url');
+        $table->string('paybill_till');
+        $table->string('shortcode');
+        $table->tinyInteger('published')->nullable()->default(0);
+
+    }
 }

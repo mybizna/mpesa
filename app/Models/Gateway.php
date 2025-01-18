@@ -5,6 +5,8 @@ namespace Modules\Mpesa\Models;
 use Modules\Account\Models\Ledger;
 use Modules\Base\Models\BaseModel;
 use Modules\Core\Models\Currency;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Gateway extends BaseModel
 {
@@ -37,7 +39,7 @@ class Gateway extends BaseModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function ledger()
+    public function ledger(): BelongsTo
     {
         return $this->belongsTo(Ledger::class);
     }
@@ -47,15 +49,36 @@ class Gateway extends BaseModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function currency()
+    public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
     }
 
+
+    public function migration(Blueprint $table): void
+    {
+        $table->id();
+
+        $table->string('title');
+        $table->string('slug');
+        $table->string('consumer_key');
+        $table->string('consumer_secret');
+        $table->string('initiator_name');
+        $table->string('initiator_password');
+        $table->string('passkey');
+        $table->string('party_a');
+        $table->string('party_b');
+        $table->string('business_shortcode');
+        $table->string('phone_number')->nullable();
+        $table->enum('type', ['paybill', 'till_number', 'shortcode'])->default('paybill')->nullable();
+        $table->enum('method', ['sending', 'receiving'])->default('sending')->nullable();
+        $table->foreignId('ledger_id')->nullable()->constrained('account_ledger')->onDelete('set null');
+        $table->foreignId('currency_id')->nullable()->constrained('core_currency')->onDelete('set null');
+        $table->string('description')->nullable();
+        $table->tinyInteger('default')->nullable()->default(0);
+        $table->tinyInteger('sandbox')->nullable()->default(0);
+        $table->tinyInteger('published')->nullable()->default(0);
+
+    }
 }
 
-/**
- *
- * ReceiverIdentifierType
- *
- */

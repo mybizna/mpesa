@@ -4,6 +4,8 @@ namespace Modules\Mpesa\Models;
 
 use Modules\Base\Models\BaseModel;
 use Modules\Mpesa\Models\Gateway;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Stkpush extends BaseModel
 {
@@ -33,9 +35,26 @@ class Stkpush extends BaseModel
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function gateway()
+    public function gateway(): BelongsTo
     {
         return $this->belongsTo(Gateway::class);
     }
 
+
+    public function migration(Blueprint $table): void
+    {
+        $table->id();
+
+        $table->string('amount');
+        $table->string('phone');
+        $table->string('reference');
+        $table->string('description')->nullable();
+        $table->string('command')->nullable();
+        $table->string('merchant_request_id')->nullable();
+        $table->string('checkout_request_id')->nullable();
+        $table->foreignId('gateway_id')->nullable()->constrained('mpesa_gateway')->onDelete('set null');
+        $table->tinyInteger('completed')->nullable()->default(0);
+        $table->tinyInteger('successful')->nullable()->default(0);
+
+    }
 }
