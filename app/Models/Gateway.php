@@ -71,13 +71,19 @@ class Gateway extends BaseModel
         $table->string('phone_number')->nullable();
         $table->enum('type', ['paybill', 'till_number', 'shortcode'])->default('paybill')->nullable();
         $table->enum('method', ['sending', 'receiving'])->default('sending')->nullable();
-        $table->foreignId('ledger_id')->nullable()->constrained('account_ledger')->onDelete('set null');
-        $table->foreignId('currency_id')->nullable()->constrained('core_currency')->onDelete('set null');
+        $table->unsignedBigInteger('ledger_id')->nullable();
+        $table->unsignedBigInteger('currency_id')->nullable();
         $table->string('description')->nullable();
         $table->tinyInteger('default')->nullable()->default(0);
         $table->tinyInteger('sandbox')->nullable()->default(0);
         $table->tinyInteger('published')->nullable()->default(0);
 
+    }
+
+    public function post_migration(Blueprint $table): void
+    {
+        $table->foreign('ledger_id')->references('id')->on('account_ledger')->onDelete('set null');
+        $table->foreign('currency_id')->references('id')->on('core_currency')->onDelete('set null');
     }
 }
 

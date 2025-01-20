@@ -1,11 +1,10 @@
 <?php
-
 namespace Modules\Mpesa\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Schema\Blueprint;
 use Modules\Base\Models\BaseModel;
 use Modules\Mpesa\Models\Gateway;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Simulate extends BaseModel
 {
@@ -40,7 +39,6 @@ class Simulate extends BaseModel
         return $this->belongsTo(Gateway::class);
     }
 
-
     public function migration(Blueprint $table): void
     {
 
@@ -48,9 +46,14 @@ class Simulate extends BaseModel
         $table->string('phone');
         $table->string('reference')->nullable();
         $table->string('description')->nullable();
-        $table->foreignId('gateway_id')->nullable()->constrained(table: 'mpesa_gateway')->onDelete('set null');
+        $table->unsignedBigInteger('gateway_id')->nullable();
         $table->tinyInteger('completed')->nullable()->default(0);
         $table->tinyInteger('successful')->nullable()->default(0);
 
+    }
+
+    public function post_migration(Blueprint $table): void
+    {
+        $table->foreign('gateway_id')->references('id')->on('mpesa_gateway')->onDelete('set null');
     }
 }

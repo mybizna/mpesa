@@ -51,9 +51,14 @@ class Stkpush extends BaseModel
         $table->string('command')->nullable();
         $table->string('merchant_request_id')->nullable();
         $table->string('checkout_request_id')->nullable();
-        $table->foreignId('gateway_id')->nullable()->constrained('mpesa_gateway')->onDelete('set null');
+        $table->unsignedBigInteger('gateway_id')->nullable();
         $table->tinyInteger('completed')->nullable()->default(0);
         $table->tinyInteger('successful')->nullable()->default(0);
 
+    }
+
+    public function post_migration(Blueprint $table): void
+    {
+        $table->foreign('gateway_id')->references('id')->on('mpesa_gateway')->onDelete('set null');
     }
 }
